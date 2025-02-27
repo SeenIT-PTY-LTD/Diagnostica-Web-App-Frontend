@@ -1,0 +1,11 @@
+It seems like you're encountering an issue where a specific path, `http://3.27.228.188/patient`, which is a frontend path, is being treated as a GET request by the server, resulting in a 404 (Not Found) error. Typically, this occurs because the server doesn't have a specific route or resource corresponding to that path.
+
+To avoid this confusion, you can consider a few approaches:
+
+1. **Server Configuration:** Adjust the server configuration to handle such paths differently. For instance, you might set up a rule to ignore or handle these paths separately from regular GET requests.
+
+2. **Client-side Routing:** If this path is only relevant within the frontend (for client-side routing), you can handle it without making an actual server request. Libraries like React Router, Vue Router, or Angular's router can manage these paths internally without contacting the server.
+
+3. **Mock Responses:** If the path is for UI purposes and doesn't correspond to any backend functionality, consider mocking a response on the server to avoid the 404 error. This response can be a placeholder or empty response solely for frontend routing purposes.
+
+Can you provide more details about your server configuration or how the frontend and backend are structured? That might help in providing more specific guidance.
