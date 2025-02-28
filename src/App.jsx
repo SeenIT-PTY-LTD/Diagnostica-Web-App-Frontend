@@ -78,7 +78,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="patient" element={<Patient Current_user ={Current_user}/>} />
           <Route path="doctors" element={<Doctor Current_user ={Current_user}/>} />
-          <Route path="view" element={<Viewpage token={token} activeComponentt={activeComponentt} setActiveComponentt={setActiveComponentt}  />} />
+          <Route path="view" element={<Viewpage token={token}/>} />
           <Route path="form" element={<DoctorForm />} />
           <Route path="updateform" element={<UpdateForm />} />
           <Route path="update" element={<UpdatePatient />} />
@@ -91,7 +91,7 @@ function App() {
           <Route path="step6" element={<Page5/>} />
           <Route path="step7" element={<Page6/>} />
           <Route path="step8" element={<Page7/>} />
-          <Route path="step9" element={<Page8 activeComponentt={activeComponentt} />} token={token}/>
+          <Route path="step9" element={<Page8 />} token={token}/>
         </Route>
       </Routes>
     </div>
