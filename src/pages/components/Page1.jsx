@@ -181,6 +181,7 @@ function Page1() {
               classNamePrefix="select"
               placeholder="Acquired"
               options={disease}
+              isClearable
               onChange={handlediseaseChange}
               styles={styles}
               id="acquiredDropdown"
@@ -192,6 +193,7 @@ function Page1() {
               classNamePrefix="select"
               placeholder="Acute"
               options={A_c}
+              isClearable
               onChange={handleDisease}
               styles={styles}
               id="acquiredAcuteDropdown"
@@ -203,6 +205,7 @@ function Page1() {
               classNamePrefix="select"
               placeholder="Congenital"
               options={congential}
+              isClearable
               onChange={handleDiseaseChange}
               styles={styles}
               id="congenitalDropdown"

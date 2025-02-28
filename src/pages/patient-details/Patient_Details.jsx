@@ -62,7 +62,7 @@ const Patient_Details = () => {
                   >
                     Name{" "}
                   </p>
-                  <p>: {Data.fname}</p>
+                  <p>: {Data?.fname}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -75,7 +75,7 @@ const Patient_Details = () => {
                   >
                     DOB{" "}
                   </p>
-                  <p>: {Data.dob}</p>
+                  <p>: {Data?.dob}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -88,7 +88,7 @@ const Patient_Details = () => {
                   >
                     Gender{" "}
                   </p>
-                  <p>: {Data.gender}</p>
+                  <p>: {Data?.gender}</p>
                 </div>
                
                 <div style={{ display: "flex" }}>
@@ -102,7 +102,7 @@ const Patient_Details = () => {
                   >
                     Phone{" "}
                   </p>
-                  <p>: {Data.phone}</p>
+                  <p>: {Data?.phone}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -115,7 +115,7 @@ const Patient_Details = () => {
                   >
                     Address{" "}
                   </p>
-                  <p>: {Data.address}</p>
+                  <p>: {Data?.address}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -128,7 +128,7 @@ const Patient_Details = () => {
                   >
                     State{" "}
                   </p>
-                  <p>: {Data.state}</p>
+                  <p>: {Data?.state}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -141,7 +141,7 @@ const Patient_Details = () => {
                   >
                     Postcode{" "}
                   </p>
-                  <p>: {Data.postcode}</p>
+                  <p>: {Data?.postcode}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -154,7 +154,7 @@ const Patient_Details = () => {
                   >
                     Height{" "}
                   </p>
-                  <p>: {Data.height}</p>
+                  <p>: {Data?.height}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -167,7 +167,7 @@ const Patient_Details = () => {
                   >
                     Weight{" "}
                   </p>
-                  <p>: {Data.weight}</p>
+                  <p>: {Data?.weight}</p>
                 </div>
                 <div style={{ display: "flex" }}>
                   <p
@@ -180,7 +180,7 @@ const Patient_Details = () => {
                   >
                     BMI
                   </p>
-                  <p>: {Data.bmi}</p>
+                  <p>: {Data?.bmi}</p>
                 </div> <div style={{ display: "flex" }}>
                   <p
                     style={{
@@ -192,7 +192,7 @@ const Patient_Details = () => {
                   >
                     Email{" "}
                   </p>
-                  <p style={{ fontSize: "15px" }}>: {Data.email}</p>
+                  <p style={{ fontSize: "15px" }}>: {Data?.email}</p>
                 </div>
               </div>
             </Card>

@@ -224,6 +224,7 @@ function Page6() {
                         classNamePrefix="select"
                         onChange={handleimg3Change}
                         options={Score_3}
+                        isClearable
                         styles={styles}
                         id="hh2"
                     />

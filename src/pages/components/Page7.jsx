@@ -111,6 +111,7 @@ function Page7() {
                         classNamePrefix="select"
                         onChange={handlePatientChange}
                         options={patient}
+                        isClearable
                         styles={styles}
                         id="hh"
                     />

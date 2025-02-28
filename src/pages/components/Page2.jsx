@@ -100,6 +100,7 @@ function Page2() {
                         classNamePrefix="select"
                         onChange={handlefootChange}
                         options={foot}
+                        isClearable
                         styles={styles}
                         id="hh"
                     />
