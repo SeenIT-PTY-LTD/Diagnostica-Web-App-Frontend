@@ -473,6 +473,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleForefoot1}
                 options={bones1}
+                isClearable
                 styles={styles}
                 placeholder="Bones"
                 id="hh"
@@ -486,6 +487,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleForefoot2}
                 options={Ligament1}
+                isClearable
                 styles={styles}
                 placeholder="Ligament"
                 id="hh"
@@ -499,6 +501,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleForefoot3}
                 options={Tendon1}
+                isClearable
                 styles={styles}
                 placeholder="Tendon"
                 id="hh"
@@ -512,6 +515,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleForefoot4}
                 options={Nerve1}
+                isClearable
                 styles={styles}
                 placeholder="Nerve"
                 id="hh"
@@ -542,6 +546,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleForefoot5}
                 options={skin}
+                isClearable
                 styles={styles}
                 placeholder="skin"
                 id="hh"
@@ -562,6 +567,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleMidfoot1}
                 options={bones2}
+                isClearable
                 styles={styles}
                 placeholder="Bones"
                 id="hh"
@@ -575,6 +581,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleMidfoot2}
                 options={Ligament2}
+                isClearable
                 styles={styles}
                 placeholder="Ligament"
                 id="hh"
@@ -588,6 +595,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleMidfoot3}
                 options={Tendon2}
+                isClearable
                 styles={styles}
                 placeholder="Tendon"
                 id="hh"
@@ -602,6 +610,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleMidfoot4}
                 options={Nerve2}
+                isClearable
                 styles={styles}
                 placeholder="Nerves"
                 id="hh"
@@ -632,6 +641,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleMidfoot5}
                 options={skin}
+                isClearable
                 styles={styles}
                 placeholder="skin"
                 id="hh"
@@ -650,6 +660,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleHindfoot1}
                 options={bones3}
+                isClearable
                 styles={styles}
                 placeholder="Bones"
                 id="hh"
@@ -663,6 +674,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleHindfoot2}
                 options={Ligament3}
+                isClearable
                 styles={styles}
                 placeholder="Ligament"
                 id="hh"
@@ -676,6 +688,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleHindfoot3}
                 options={Tendon3}
+                isClearable
                 styles={styles}
                 placeholder="Tendon"
                 id="hh"
@@ -689,6 +702,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleHindfoot4}
                 options={Nerve3}
+                isClearable
                 styles={styles}
                 placeholder="Nerves"
                 id="hh"
@@ -719,6 +733,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleHindfoot5}
                 options={skin}
+                isClearable
                 styles={styles}
                 placeholder="Skin"
                 id="hh"
@@ -737,6 +752,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleAnkle1}
                 options={bones4}
+                isClearable
                 styles={styles}
                 placeholder="Bones"
                 id="hh"
@@ -750,6 +766,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleAnkle2}
                 options={Ligament4}
+                isClearable
                 styles={styles}
                 placeholder="Ligaments"
                 id="hh"
@@ -763,6 +780,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleAnkle3}
                 options={Tendon4}
+                isClearable
                 styles={styles}
                 placeholder="Tendon"
                 id="hh"
@@ -776,6 +794,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleAnkle4}
                 options={Nerve4}
+                isClearable
                 styles={styles}
                 placeholder="Nerves"
                 id="hh"
@@ -806,6 +825,7 @@ function Page3() {
                 classNamePrefix="select"
                 onChange={handleAnkle5}
                 options={skin}
+                isClearable
                 styles={styles}
                 placeholder="Skin"
                 id="hh"

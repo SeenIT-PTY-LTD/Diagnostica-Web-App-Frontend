@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 function Page6() {
-
     const location = useLocation();
     const defaultValue = new URLSearchParams(location.search).get('defaultValue');
     const email = new URLSearchParams(location.search).get('email');
@@ -176,49 +175,43 @@ function Page6() {
                     <p><b>STEP 6:</b>  The Diagnostica code can be extended to account for comorbidity
                         descriptors. We can use Charlson Comorbidity Index (CCI) as the added descriptor.</p>
                 </div>
-                <div className='grid grid-cols-3 gap-6'>
-                   <div className='cols-span-4'>
-                    {/* <img src={MobileLogo} alt="" style={{ width: 360, height: 0 }} /> */}
-                   <label htmlFor=" mul_1" className="form-label ">
-                        SCORE 1
-                    </label>
-                    <Select
-                        isClearable={false}
-                        onChange={handleimg1Change}
-                        styles={styles}
-                        isMulti
-                        name="colors"
-                        options={Score_1}
-                        className="react-select "
-                        classNamePrefix="select"
-                        id="mul_1"
-                        
-                        
-                    />
-                   </div>
+                <div className="grid grid-cols-3 gap-6">
+            {/* SCORE 1 */}
+            <div className="cols-span-4">
+                <label htmlFor="mul_1" className="form-label">SCORE 1</label>
+                <Select
+                    isClearable={false}
+                    onChange={handleimg1Change}
+                    styles={styles}
+                    isMulti
+                    options={Score_1}
+                    className="react-select"
+                    classNamePrefix="select"
+                    id="mul_1"
+                />
+            </div>
 
-                   <div className='cols-span-4'>
-                   {/* <img src={MobileLogo} alt="" style={{ width: 360, height: 0 }} /> */}
-                   <label htmlFor=" hh1" className="form-label ">
-                        SCORE 2
-                    </label>
+            {/* SCORE 2 (only active if SCORE 1 is selected) */}
+            {Img11 && (
+                <div className="cols-span-4">
+                    <label htmlFor="hh1" className="form-label">SCORE 2</label>
                     <Select
                         isClearable={false}
                         onChange={handleimg2Change}
                         styles={styles}
                         isMulti
-                        name="colors"
                         options={Score_2}
                         className="react-select"
                         classNamePrefix="select"
                         id="hh1"
                     />
-                   </div >
-                   <div className='cols-span-4'>
-                   {/* <img src={MobileLogo} alt="" style={{ width: 360, height: 0 }} /> */}
-                     <label htmlFor=" hh2" className="form-label ">
-                        SCORE 3 & 6
-                    </label>
+                </div>
+            )}
+
+            {/* SCORE 3 & 6 (only active if SCORE 2 is selected) */}
+            {Img11 && (
+                <div className="cols-span-4">
+                    <label htmlFor="hh2" className="form-label">SCORE 3 & 6</label>
                     <Select
                         className="react-select"
                         classNamePrefix="select"
@@ -228,9 +221,9 @@ function Page6() {
                         styles={styles}
                         id="hh2"
                     />
-                   </div>
-
                 </div>
+            )}
+        </div>
                     <br />
                     <br />
                 <div className="flex justify-around">
