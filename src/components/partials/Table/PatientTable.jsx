@@ -16,6 +16,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import autoTable from "jspdf-autotable";
 
+
 const COLUMNS = [
   {
     Header: "#",
@@ -51,6 +52,7 @@ const COLUMNS = [
   },
 ];
 const PatientTable = ({ Current_user }) => {
+  const navigate = useNavigate();
   const columns = useMemo(() => COLUMNS, []);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -100,10 +102,10 @@ const PatientTable = ({ Current_user }) => {
     }
   };
 
-  const navigate = useNavigate();
   const handleView = (email) => {
-    // Navigate to the ViewPage with the patient's email as a parameter
-    navigate(`/view?email=${encodeURIComponent(email)}`);
+    navigate(`/view?email=${encodeURIComponent(email)}`, {
+      state: { activeComponent: "Patient Details" }, // Passing the default state
+    });
   };
 
   // const handleDelete = async (email) => {

@@ -7,13 +7,12 @@ import Select from "react-select";
 import Radio from "../../components/ui/Radio";
 import { useLocation } from "react-router-dom";
 
-
 function Page3() {
   const navigate = useNavigate();
   const location = useLocation();
   const defaultValue = new URLSearchParams(location.search).get("defaultValue");
   const email = new URLSearchParams(location.search).get("email");
-  const doctor =new URLSearchParams(location.search).get('doctor');
+  const doctor = new URLSearchParams(location.search).get("doctor");
 
   const [value, setValue] = useState("");
 
@@ -256,10 +255,11 @@ function Page3() {
     { value: "(Fascia:5) ", label: "Fascia" },
   ];
 
-
   const handleMultiSelect = (selectedOption, setStateFunction) => {
     setStateFunction(selectedOption);
-    const newDefaultValue = selectedOption ? selectedOption.map((opt) => opt.value).join(":") : "";
+    const newDefaultValue = selectedOption
+      ? selectedOption.map((opt) => opt.value).join(":")
+      : "";
     return newDefaultValue;
   };
 
@@ -285,7 +285,7 @@ function Page3() {
   };
   const handleForefoot6 = (selectedOption) => {
     const newDefaultValue = handleMultiSelect(selectedOption, setJoints1);
-   };
+  };
 
   const handleMidfoot1 = (selectedOption) => {
     setBones2(selectedOption);
@@ -309,7 +309,7 @@ function Page3() {
   };
   const handleMidfoot6 = (selectedOption) => {
     const newDefaultValue = handleMultiSelect(selectedOption, setJoints2);
-   };
+  };
 
   const handleHindfoot1 = (selectedOption) => {
     setBones3(selectedOption);
@@ -333,7 +333,7 @@ function Page3() {
   };
   const handleHindfoot6 = (selectedOption) => {
     const newDefaultValue = handleMultiSelect(selectedOption, setJoints3);
-   };
+  };
 
   const handleAnkle1 = (selectedOption) => {
     setBones4(selectedOption);
@@ -357,14 +357,20 @@ function Page3() {
   };
   const handleAnkle6 = (selectedOption) => {
     const newDefaultValue = handleMultiSelect(selectedOption, setJoints4);
-   };
+  };
 
-
-
-  const joints1Values = Joints1 ? Joints1.map((option) => option.value).join('') : '';
-  const joints2Values = Joints2 ? Joints2.map((option) => option.value).join('') : '';
-  const joints3Values = Joints3 ? Joints3.map((option) => option.value).join('') : '';
-  const joints4Values = Joints4 ? Joints4.map((option) => option.value).join('') : '';
+  const joints1Values = Joints1
+    ? Joints1.map((option) => option.value).join("")
+    : "";
+  const joints2Values = Joints2
+    ? Joints2.map((option) => option.value).join("")
+    : "";
+  const joints3Values = Joints3
+    ? Joints3.map((option) => option.value).join("")
+    : "";
+  const joints4Values = Joints4
+    ? Joints4.map((option) => option.value).join("")
+    : "";
 
   const handleNext = () => {
     let combinedDefaultValue = defaultValue || "";
@@ -375,7 +381,9 @@ function Page3() {
       const Forefoot3Value = tendon1 ? tendon1.value : "";
       const Forefoot4Value = nerve1 ? nerve1.value : "";
       const Forefoot5Value = Skin1 ? Skin1.value : "";
-      const Forefoot6Value = joints1Values ? `: (${joints1Values} : Joints)` : '';
+      const Forefoot6Value = joints1Values
+        ? `: (${joints1Values} : Joints)`
+        : "";
       combinedDefaultValue = `${combinedDefaultValue} [ ${Forefoot1Value} ${Forefoot2Value} ${Forefoot3Value} ${Forefoot4Value} ${Forefoot6Value} ${Forefoot5Value} ]`;
     } else if (showMidfoot) {
       const midfoot1Value = Bones2 ? Bones2.value : "";
@@ -383,7 +391,9 @@ function Page3() {
       const midfoot3Value = tendon2 ? tendon2.value : "";
       const midfoot4Value = nerve2 ? nerve2.value : "";
       const midfoot5Value = Skin2 ? Skin2.value : "";
-      const midfoot6Value = joints2Values ? `: (${joints2Values} : Joints)` : '';
+      const midfoot6Value = joints2Values
+        ? `: (${joints2Values} : Joints)`
+        : "";
       combinedDefaultValue = `${combinedDefaultValue} [${midfoot1Value} ${midfoot2Value} ${midfoot3Value} ${midfoot4Value} ${midfoot6Value} ${midfoot5Value}]`;
     } else if (showHindfoot) {
       const Hindfoot1Value = Bones3 ? Bones3.value : "";
@@ -391,7 +401,9 @@ function Page3() {
       const Hindfoot3Value = tendon3 ? tendon3.value : "";
       const Hindfoot4Value = nerve3 ? nerve3.value : "";
       const Hindfoot5Value = Skin3 ? Skin3.value : "";
-      const Hindfoot6Value = joints3Values ? `: (${joints3Values} : Joints)` : '';
+      const Hindfoot6Value = joints3Values
+        ? `: (${joints3Values} : Joints)`
+        : "";
       combinedDefaultValue = `${combinedDefaultValue} [${Hindfoot1Value} ${Hindfoot2Value} ${Hindfoot3Value} ${Hindfoot4Value} ${Hindfoot6Value} ${Hindfoot5Value}]`;
     } else if (showAnkle) {
       const Ankle1Value = Bones4 ? Bones4.value : "";
@@ -399,7 +411,7 @@ function Page3() {
       const Ankle3Value = tendon4 ? tendon4.value : "";
       const Ankle4Value = nerve4 ? nerve4.value : "";
       const Ankle5Value = Skin4 ? Skin4.value : "";
-      const Ankle6Value = joints4Values ? `: (${joints4Values} : Joints)` : '';
+      const Ankle6Value = joints4Values ? `: (${joints4Values} : Joints)` : "";
       combinedDefaultValue = `${combinedDefaultValue} [${Ankle1Value} ${Ankle2Value} ${Ankle3Value} ${Ankle4Value} ${Ankle6Value} ${Ankle5Value}]`;
     }
     const updatedURL = `/step6?defaultValue=${combinedDefaultValue} &email=${email}&doctor=${doctor}`;
@@ -523,7 +535,7 @@ function Page3() {
             </div>
 
             <div className="cols-span-4">
-                <br />
+              <br />
               <Select
                 isClearable={false}
                 onChange={handleForefoot6}
@@ -552,8 +564,6 @@ function Page3() {
                 id="hh"
               />
             </div>
-
-            
           </div>
         )}
 
@@ -618,7 +628,7 @@ function Page3() {
             </div>
 
             <div className="cols-span-4">
-                <br />
+              <br />
               <Select
                 isClearable={false}
                 onChange={handleMidfoot6}
@@ -710,7 +720,7 @@ function Page3() {
             </div>
 
             <div className="cols-span-4">
-                <br />
+              <br />
               <Select
                 isClearable={false}
                 onChange={handleHindfoot6}
@@ -802,7 +812,7 @@ function Page3() {
             </div>
 
             <div className="cols-span-4">
-                <br />
+              <br />
               <Select
                 isClearable={false}
                 onChange={handleAnkle6}

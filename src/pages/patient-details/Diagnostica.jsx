@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { API } from "../../host";
 
 function Diagnostica({ token }) {
   const [Data, setData] = useState([]);
   const [showButton, setShowButton] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
   const email1 = new URLSearchParams(location.search).get("email");
   const decodedToken = token ? jwtDecode(token) : null;
   const doctor = decodedToken.email;
-
   const [refresh, setRefresh] = useState(false);
 
   const openNewTab = () => {
-    window.open(`step1?email=${email1}&doctor=${doctor}`);
+    navigate(`/step1?email=${email1}&doctor=${doctor}`);
+    // window.open(`step1?email=${email1}&doctor=${doctor}`);
   };
 
+  const fetchRef = useRef(false); // Prevents re-fetching
+
   useEffect(() => {
-    if (email1) {
+    if (email1 && !fetchRef.current) {
+      fetchRef.current = true; // Mark as fetched
       axios
         .get(`${API}/getdatas?email=${email1}`)
         .then((response) => {
@@ -28,13 +32,14 @@ function Diagnostica({ token }) {
           if (response.data.length > 0) {
             // Data is available, hide the button
             setShowButton(false);
+            localStorage.setItem('userData', JSON.stringify(response.data));
           }
         })
         .catch((error) => {
           console.error("Error fetching answers:", error);
         });
     }
-  }, [email1, refresh]);
+  }, [email1]);
 
   const stepStyles = {
     fontWeight: "bold",
@@ -71,7 +76,7 @@ function Diagnostica({ token }) {
           </button>
           <br />
           <br />
-          <p>Redirect to New Tab</p>
+          {/* <p>Redirect to New Tab</p> */}
         </div>
       )}
 

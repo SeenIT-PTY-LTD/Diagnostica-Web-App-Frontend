@@ -1,18 +1,19 @@
-import React, { Fragment, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Textinput from '../../components/ui/Textinput';
-import Card from '../../components/ui/Card';
-import Radio from '../../components/ui/Radio';
-import { useParams } from 'react-router-dom';
+import React, { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Textinput from "../../components/ui/Textinput";
+import Card from "../../components/ui/Card";
+import Radio from "../../components/ui/Radio";
+import { useParams } from "react-router-dom";
 
 function Page() {
-  
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [region, setRegion] = useState("");
-  const email = new URLSearchParams(location.search).get('email');
-  const doctor =new URLSearchParams(location.search).get('doctor');
+  const email = new URLSearchParams(location.search).get("email");
+  const doctor = new URLSearchParams(location.search).get("doctor");
+  const userData = localStorage.getItem('userData');
+            
   const handleChange = (e) => {
     setValue(e.target.value);
     setRegion(e.target.value);
@@ -30,7 +31,9 @@ function Page() {
     {
       title: "Next",
       onClick: () => {
-        navigate(`/step2?defaultValue=${region}&email=${email}&doctor=${doctor}`);
+        navigate(
+          `/step2?defaultValue=${region}&email=${email}&doctor=${doctor}`
+        );
       },
     },
   ];
@@ -53,8 +56,11 @@ function Page() {
           />
         </div>
 
-        <div className='flex justify-center space-y-8 px-8 py-8'>
-          <p><b>STEP 1:</b> We assign a region for the injury as it relates to standard anatomical position, namely, RIGHT (R) or LEFT (L)</p>
+        <div className="flex justify-center space-y-8 px-8 py-8">
+          <p>
+            <b>STEP 1:</b> We assign a region for the injury as it relates to
+            standard anatomical position, namely, RIGHT (R) or LEFT (L)
+          </p>
         </div>
 
         <div className="flex flex-wrap space-xy-5 justify-around items-center space-y-8 px-8 py-8">

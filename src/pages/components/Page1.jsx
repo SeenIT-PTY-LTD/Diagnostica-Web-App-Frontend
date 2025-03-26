@@ -11,10 +11,8 @@ import Radio from '../../components/ui/Radio';
 function Page1() {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [showAcquired, setShowAcquired] = useState(false);
   const [showCongenital, setShowCongenital] = useState(false);
-  
   const [value, setValue] = useState("");
 
   const defaultValue = new URLSearchParams(location.search).get('defaultValue');

@@ -1,4 +1,4 @@
-import React, { Fragment, useState,useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Textinput from "../../components/ui/Textinput";
 import Card from "../../components/ui/Card";
@@ -12,17 +12,18 @@ import Textarea from "../../components/ui/Textarea";
 function Page8() {
   const location = useLocation();
   const defaultValue = new URLSearchParams(location.search).get("defaultValue");
+  const email1 = new URLSearchParams(location.search).get("email");
   const navigate = useNavigate();
   const [Patient, setPatient] = useState(null);
   const initialUserData = {
     firstname: "",
     lastname: "",
   };
-  const [doctorget, setdoctorget] = useState()
+  const [doctorget, setdoctorget] = useState();
   const [NewDefaultValue, setNewDefaultValue] = useState("");
   //const [email, setEmail] = useState('')
-  const email = new URLSearchParams(location.search).get("email")
-  const doctor =new URLSearchParams(location.search).get('doctor');;
+  const email = new URLSearchParams(location.search).get("email");
+  const doctor = new URLSearchParams(location.search).get("doctor");
 
   const [textValue, setTextValue] = useState("");
 
@@ -40,31 +41,33 @@ function Page8() {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(
-        `${API}/getemail?email=${doctor}`
-      );
+      const response = await axios.get(`${API}/getemail?email=${doctor}`);
       const responseData = response.data;
-      console.log(responseData)
+      console.log(responseData);
       setdoctorget(responseData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const doctorname = doctorget ? `${doctorget.firstname} ${doctorget.lastname}` : '';
+  const doctorname = doctorget
+    ? `${doctorget.firstname} ${doctorget.lastname}`
+    : "";
 
   const handleSubmit = async () => {
     const currentDateTime = new Date();
-    const options = { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }; 
-    const currentDate = currentDateTime.toLocaleDateString('en-US', options); 
-    const currentTime = currentDateTime.toLocaleTimeString('en-US', options); 
+    const options = {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
+    const currentDate = currentDateTime.toLocaleDateString("en-US", options);
+    const currentTime = currentDateTime.toLocaleTimeString("en-US", options);
     const requestData = {
-        data: defaultValue,
-        email: email,
-        comment: textValue,
-        doctor: doctorname,
-        date: currentDate,
-        time: currentTime
+      data: defaultValue,
+      email: email,
+      comment: textValue,
+      doctor: doctorname,
+      date: currentDate,
+      time: currentTime,
     };
     console.log(requestData);
 
@@ -73,7 +76,10 @@ function Page8() {
       console.log(response.data);
 
       if (response.status === 200) {
-        window.close();
+        // window.close();
+        navigate(`/view?email=${email1}`, {
+          state: { activeComponent: "Diagnostica" }, // Passing the default state
+        });
       } else {
         console.log("Server returned a non-200 status code.");
       }
@@ -87,16 +93,18 @@ function Page8() {
 
   const handleGenerate = async () => {
     const currentDateTime = new Date();
-    const options = { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }; 
-    const currentDate = currentDateTime.toLocaleDateString('en-US', options); 
-    const currentTime = currentDateTime.toLocaleTimeString('en-US', options); 
+    const options = {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
+    const currentDate = currentDateTime.toLocaleDateString("en-US", options);
+    const currentTime = currentDateTime.toLocaleTimeString("en-US", options);
     const requestData = {
       data: defaultValue,
       email: email,
       comment: textValue,
-      doctor:doctorname,
+      doctor: doctorname,
       date: currentDate,
-      time: currentTime
+      time: currentTime,
     };
     console.log(requestData);
 
@@ -176,7 +184,6 @@ function Page8() {
 
           <div>
             <Textarea
-              
               id="pn4"
               placeholder="Comment here..."
               row="5"
