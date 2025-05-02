@@ -28,13 +28,13 @@ const Images = () => {
         if (email) {
           const response = await axios.get(`${API}/getimage?email=${email}`);
           setData(response.data);
-           //console.log(response.data)
+          //console.log(response.data)
           const range = await axios.get(`${API}/getpainrange?email=${email}`);
           setRange(range.data);
 
           const comment = await axios.get(`${API}/getcomment?email=${email}`);
           setComment(comment.data);
-        //   console.log(comment.data);
+          //   console.log(comment.data);
         }
       } catch (error) {
         console.error("Error fetching answers:", error);
@@ -79,20 +79,24 @@ const Images = () => {
         </div>
       </Tab.Group>
       <div className="grid grid-cols-3 gap-3 h-max mt-2">
-      {Data.length > 0 &&
-          Data.map((dataItem, dataIndex) => (
-            <React.Fragment key={dataIndex}>
-              {Object.keys(dataItem).filter(key => key.startsWith("img")).map((imgKey, imgIndex) => (
-                <Card bodyClass="p-4 rounded-md" className="group" key={`${dataIndex}-${imgIndex}`}>
+        {Data.length > 0 &&
+          Data.map(
+            (dataItem, dataIndex) =>
+              dataItem.img && (
+                <Card
+                  bodyClass="p-4 rounded-md"
+                  className="group"
+                  key={dataIndex}
+                >
                   <div className="bg-white dark:rounded relative h-[350px] flex flex-col justify-center items-center mb-3 rounded-md">
                     <TransformWrapper initialScale={1}>
-                      {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
-                        <React.Fragment>
+                      {({ zoomIn, zoomOut, resetTransform }) => (
+                        <>
                           <TransformComponent>
                             <img
                               className="zoomable-image"
-                              src={`${API}/images/${dataItem[imgKey]}`}
-                              alt={`Foot image ${imgIndex + 1}`}
+                              src={`https://newapi.diagnostica.app/images/${dataItem.img}`}
+                              alt={`Foot image ${dataIndex + 1}`}
                             />
                           </TransformComponent>
                           <div className="tools flex gap-6 items-center justify-evenly pt-3">
@@ -109,14 +113,13 @@ const Images = () => {
                               <i className="bi bi-zoom-in"></i>
                             </button>
                           </div>
-                        </React.Fragment>
+                        </>
                       )}
                     </TransformWrapper>
                   </div>
                 </Card>
-              ))}
-            </React.Fragment>
-          ))}
+              )
+          )}
       </div>
     </div>
   );

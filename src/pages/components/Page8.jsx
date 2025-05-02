@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Textinput from "../../components/ui/Textinput";
 import Card from "../../components/ui/Card";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -54,42 +54,98 @@ function Page8() {
     ? `${doctorget.firstname} ${doctorget.lastname}`
     : "";
 
-  const handleSubmit = async () => {
-    const currentDateTime = new Date();
-    const options = {
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    };
-    const currentDate = currentDateTime.toLocaleDateString("en-US", options);
-    const currentTime = currentDateTime.toLocaleTimeString("en-US", options);
-    const requestData = {
-      data: defaultValue,
-      email: email,
-      comment: textValue,
-      doctor: doctorname,
-      date: currentDate,
-      time: currentTime,
-    };
-    console.log(requestData);
+    const handleSubmit = async () => {
+      const currentDateTime = new Date();
+      const options = {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      };
+      const currentDate = currentDateTime.toLocaleDateString("en-US", options);
+      const currentTime = currentDateTime.toLocaleTimeString("en-US", options);
+    
+      const formType = localStorage.getItem('formType') || 'add'; // 'add' or 'edit'
+      const recordId = localStorage.getItem('recordId') || ''; // 'add' or 'edit'
 
-    try {
-      const response = await axios.post(`${API}/data`, requestData);
-      console.log(response.data);
+      const endpoint = formType === 'edit' ? `/update-data?id=${recordId}` : '/data';
+    
+      // Prepare request body based on form type
+      const requestData = formType === 'edit'
+        ? {
+            id: recordId, // Include ID for edit
+            data: defaultValue,
+            email: email,
+            comment: textValue,
+            doctor: doctorname,
+            date: currentDate,
+            time: currentTime,
+          }
+        : [{
+            data: defaultValue,
+            email: email,
+            comment: textValue,
+            doctor: doctorname,
+            date: currentDate,
+            time: currentTime,
+          }];
+    
+      try {
+        const response = formType === 'edit'
+          ? await axios.put(`${API}${endpoint}`, requestData)
+          : await axios.post(`${API}${endpoint}`, requestData);
+    
+        console.log(response.data);
+    
+        if (response.status === 200) {
+          localStorage.removeItem('formType'); // Clear formType after successful submission
+          navigate(`/view?email=${email1}`, {
+            state: { activeComponent: "Diagnostica" },
+          });
+        } else {
+          console.log("Server returned a non-200 status code.");
+        }
+      } catch (error) {
+        console.error("Error in submission:", error);
+        if (error.response) {
+          console.error("Response data:", error.response.data);
+        }
+      }
+    };
+    
+  // const handleSubmit = async () => {
+  //   const currentDateTime = new Date();
+  //   const options = {
+  //     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  //   };
+  //   const currentDate = currentDateTime.toLocaleDateString("en-US", options);
+  //   const currentTime = currentDateTime.toLocaleTimeString("en-US", options);
+  //   const requestData = {
+  //     data: defaultValue,
+  //     email: email,
+  //     comment: textValue,
+  //     doctor: doctorname,
+  //     date: currentDate,
+  //     time: currentTime,
+  //   };
+  //   console.log(requestData,"requestData");
 
-      if (response.status === 200) {
-        // window.close();
-        navigate(`/view?email=${email1}`, {
-          state: { activeComponent: "Diagnostica" }, // Passing the default state
-        });
-      } else {
-        console.log("Server returned a non-200 status code.");
-      }
-    } catch (error) {
-      console.error("Error in post:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-      }
-    }
-  };
+  //   try {
+  //     const response = await axios.post(`${API}/data`, requestData);
+  //     console.log(response.data);
+
+  //     if (response.status === 200) {
+  //       // window.close();
+  //       navigate(`/view?email=${email1}`, {
+  //         state: { activeComponent: "Diagnostica" }, // Passing the default state
+  //       });
+  //     } else {
+  //       console.log("Server returned a non-200 status code.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in post:", error);
+  //     if (error.response) {
+  //       console.error("Response data:", error.response.data);
+  //     }
+  //   }
+  // };
 
   const handleGenerate = async () => {
     const currentDateTime = new Date();

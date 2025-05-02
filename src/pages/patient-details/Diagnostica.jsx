@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { API } from "../../host";
+import Tooltip from "../../components/ui/Tooltip";
+import Icons from "../../components/ui/Icon";
+import Modal from "react-modal";
+import { capitalizeFirst } from "../../utils/capitalizeWords";
 
 function Diagnostica({ token }) {
   const [Data, setData] = useState([]);
@@ -32,7 +36,7 @@ function Diagnostica({ token }) {
           if (response.data.length > 0) {
             // Data is available, hide the button
             setShowButton(false);
-            localStorage.setItem('userData', JSON.stringify(response.data));
+            localStorage.setItem("userData", JSON.stringify(response.data));
           }
         })
         .catch((error) => {
@@ -63,9 +67,22 @@ function Diagnostica({ token }) {
     textAlign: "left",
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedComment, setSelectedComment] = useState(null);
+
+  const openModal = (comment) => {
+    setSelectedComment(comment);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedComment(null);
+  };
+
   return (
     <div>
-      {showButton && (
+      {/* {showButton && (
         <div>
           <button
             type="button"
@@ -76,13 +93,163 @@ function Diagnostica({ token }) {
           </button>
           <br />
           <br />
-          {/* <p>Redirect to New Tab</p> */}
         </div>
-      )}
+      )} */}
+
+      <div className="px-0 sm:px-6 lg:px-8">
+      <div className="mb-4">
+  <button
+    type="button"
+    className="btn btn-primary w-full sm:w-auto text-lg"
+    onClick={openNewTab}
+  >
+    Create New Diagnostica Path
+  </button>
+</div>
+
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {Data.length > 0 &&
+            Data.map((item, index) => (
+              <div key={item._id} className="relative">
+                <div className="flex flex-col sm:flex-row items-start justify-between space-y-4 sm:space-y-0 sm:space-x-4 p-4 sm:p-6 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 transition-colors">
+                  <div className="flex items-start space-x-4">
+                    <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span className="text-blue-600 font-medium">DR</span>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-md font-medium text-gray-900">
+                        {capitalizeFirst(item.doctor)}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                        {item.comment}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Tooltip
+                      content="Update"
+                      placement="top"
+                      arrow
+                      animation="shift-away"
+                    >
+                      <Link
+                        className="action-btn"
+                        to={`/step1?email=${email1}&doctor=${doctor}`}
+                        onClick={() => {
+                          localStorage.setItem("formType", "edit");
+                          localStorage.setItem("recordId", item._id);
+                        }}
+                      >
+                        <Icons icon="heroicons:pencil-square" width="22" />
+                      </Link>
+                    </Tooltip>
+                    <Tooltip
+                      content="View"
+                      placement="top"
+                      arrow
+                      animation="shift-away"
+                    >
+                      <button
+                        className="action-btn"
+                        type="button"
+                        onClick={() => openModal(item)}
+                      >
+                        <Icons icon="heroicons:eye" width="22" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+          {selectedComment && (
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={closeModal}
+              contentLabel="Doctor Comment"
+              className="outline-none fixed inset-0 flex items-center justify-center z-50 px-4"
+            >
+              <div className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                  <h2 className="text-xl font-bold text-gray-800">
+                    Doctor's Comment
+                  </h2>
+                  <div className="flex gap-3">
+                    <Tooltip
+                      content="Update"
+                      placement="top"
+                      arrow
+                      animation="shift-away"
+                    >
+                      <Link
+                        className="action-btn"
+                        to={`/step1?email=${email1}&doctor=${doctor}&id=${selectedComment._id}`}
+                        onClick={() => {
+                          localStorage.setItem("formType", "edit");
+                          localStorage.setItem("recordId", selectedComment._id);
+                        }}
+                      >
+                        <Icons icon="heroicons:pencil-square" width="22" />
+                      </Link>
+                    </Tooltip>
+                    <Tooltip
+                      content="Close"
+                      placement="top"
+                      arrow
+                      animation="shift-away"
+                    >
+                      <button className="action-btn" onClick={closeModal}>
+                        <Icons icon="heroicons:x-mark" width="22" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                      <span className="text-blue-600 font-medium">DR</span>
+                    </div>
+                    <div>
+                      <p className="text-lg font-semibold">
+                        {capitalizeFirst(selectedComment.doctor)}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {selectedComment.date} at {selectedComment.time}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-2">
+                    <p className="text-gray-700 whitespace-pre-wrap">
+                      <strong>Data:</strong> {selectedComment.data}
+                    </p>
+                    <p className="text-gray-800 whitespace-pre-wrap">
+                      <strong>Comment:</strong> {selectedComment.comment}
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      className="btn btn-primary w-full sm:w-auto"
+                      onClick={closeModal}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Modal>
+          )}
+        </div>
+      </div>
 
       {Data.length > 0 && (
         <div>
-          <div className="flex gap-7">
+          {/* <div className="flex gap-7">
             <p>
               <b>Data from the API:</b>
             </p>
@@ -108,7 +275,7 @@ function Diagnostica({ token }) {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           <div>
             <div className="grid grid-cols-12 gap-6 py-5">

@@ -8,6 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
 import store from "./store";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root'); // 👈 This line is important
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>

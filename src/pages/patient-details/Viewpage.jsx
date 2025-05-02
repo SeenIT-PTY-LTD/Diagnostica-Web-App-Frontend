@@ -21,7 +21,9 @@ const Viewpage = ({ token }) => {
   const decodedToken = token ? jwtDecode(token) : null;
   const doctor = decodedToken.email;
   const [activeComponent, setActiveComponent] = useState(null);
+  console.log("activeComponent", activeComponent);
   const [data, setData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [allData, setAllData] = useState([]);
   const buttons = [
@@ -76,6 +78,19 @@ const Viewpage = ({ token }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (email1) {
+      axios
+        .get(`${API}/getdatas?email=${email1}`)
+        .then((response) => {
+          setUserData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching answers:", error);
+        });
+    }
+  }, [email1]);
+
   // Set the active component from the location state or default to "Patient Details"
   useEffect(() => {
     if (location.state && location.state.activeComponent) {
@@ -91,16 +106,27 @@ const Viewpage = ({ token }) => {
     <div>
       <div className="flex justify-between flex-wrap items-center mb-6">
         <h4 className="font-medium lg:text-2xl text-xl active capitalize text-slate-900 inline-block ltr:pr-4 rtl:pl-4">
-          {/* {title} */} Patient Details
+          Patient Details
         </h4>
-        <Tooltip content="Update" placement="top" arrow animation="shift-away">
-          <Link
-            to={`/step1?email=${email1}&doctor=${doctor}`}
-            className="action-btn ml-4"
-          >
-            <Icon icon="heroicons:pencil-square" className="w-6 h-6" />{" "}
-          </Link>
-        </Tooltip>
+
+        {/* {activeComponent === "Diagnostica" &&
+          userData &&
+          userData.length > 0 && (
+            <Tooltip
+              content="Update"
+              placement="top"
+              arrow
+              animation="shift-away"
+            >
+              <Link
+                to={`/step1?email=${email1}&doctor=${doctor}`}
+                className="action-btn ml-4"
+                onClick={() => localStorage.setItem("formType", "edit")}
+              >
+                <Icon icon="heroicons:pencil-square" className="w-6 h-6" />{" "}
+              </Link>
+            </Tooltip>
+          )} */}
       </div>
       <div className="grid grid-cols-12 gap-6 mb-6">
         <div className="xl:col-span-12 lg:col-span-12 md:col-span-9 col-span-12">
