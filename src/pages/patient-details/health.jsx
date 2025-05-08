@@ -4,120 +4,134 @@ import { useLocation } from "react-router-dom";
 import { Tab } from "@headlessui/react";
 import { API } from "../../host";
 
-
 const items = [
-    {
-        id: 1,
-        question: "Mobility",
-        answer: 3
-    },
-    {
-        id: 2,
-        question: "Self-Care",
-        answer: 3
-    },
-    {
-        id: 3,
-        question: "Usual Activities",
-        answer: 3
-    },
-    { 
-        id: 4,
-        question: "Pain/Discomfort",
-        answer: 3
-    },
-    {
-        id: 5,
-        question: "Anxiety/Depression",
-        answer: 3
-    },
-    {
-        id: 6,
-        question: "overall",
-        answer: 3
-    },
-
+  {
+    id: 1,
+    question: "Mobility",
+    answer: 3,
+  },
+  {
+    id: 2,
+    question: "Self-Care",
+    answer: 3,
+  },
+  {
+    id: 3,
+    question: "Usual Activities",
+    answer: 3,
+  },
+  {
+    id: 4,
+    question: "Pain/Discomfort",
+    answer: 3,
+  },
+  {
+    id: 5,
+    question: "Anxiety/Depression",
+    answer: 3,
+  },
+  {
+    id: 6,
+    question: "overall",
+    answer: 3,
+  },
 ];
 
-
 const EQ5D = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [Data, setData] = useState([]);
+  const [selectedEntry, setSelectedEntry] = useState(null);
 
-    const [Data, setData] = useState([]);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const email = params.get("email");
 
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
-    const email = params.get("email");
+  useEffect(() => {
+    if (email) {
+      setIsLoading(true);
+      axios
+        .get(`${API}/geteq?email=${email}`)
+        .then((response) => {
+          const sortedData = response.data.sort((a, b) => {
+            const dateA = new Date(`${a.date} ${a.time}`);
+            const dateB = new Date(`${b.date} ${b.time}`);
+            return dateB - dateA; // Descending order
+          });
+          setData(sortedData);
+          if (sortedData.length > 0) {
+            setSelectedEntry(sortedData[0]);
+          }
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching EQ-5D data:", error);
+          setIsLoading(false);
+        });
+    }
+  }, [email]);
 
-    useEffect(() => {
-        if (email) {
-            axios
-                .get(`${API}/geteq?email=${email}`)
-                .then((response) => {
-                    setData(response.data);
-                })
-                .catch((error) => {
-                    console.error("Error fetching answers:", error);
+  return (
+    <div className="p-6 space-y-8">
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-white">
+        EQ-5D Submissions
+      </h1>
 
-                });
-        }
-    }, [email]);
-
-
-    return (
-        <div>
-            < Tab.Group >
-                <div className="grid gap-5 grid-cols-12">
-                    <div className="xl:col-span-12 lg:col-span-12 md:col-span-9 col-span-12">
-                        <Tab.Panels>
-                            <Tab.Panel>
-                                <div className="space-y-1">
-                                    <div>
-                                        <div className="accordion shadow-base dark:shadow-none rounded-md">
-                                            <div className="flex justify-between cursor-pointer transition duration-150 font-medium w-full text-start text-base text-slate-600 dark:text-slate-300 px-8 py-4 bg-white dark:bg-slate-700  rounded-md">
-                                                <span>EQ-5D</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="accordion shadow-base dark:shadow-none rounded-md">
-                                            <div className="flex justify-between cursor-pointer transition duration-150 font-medium w-full text-start text-base text-slate-600 dark:text-slate-300 px-8 py-4 bg-white dark:bg-slate-700 rounded-md">
-                                                <span>SI NO</span>
-                                                <span>Question</span>
-                                                <span>Answers</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {items.map((item, index) => (
-                                        <div
-                                            className="accordion shadow-base dark:shadow-none rounded-md"
-                                            key={index}
-                                        >
-                                            {item.header && ( // Check if header exists
-                                                <div className="flex justify-between cursor-pointer transition duration-150 font-medium w-full text-start text-base text-slate-600 dark:text-slate-300 px-4 py-3 bg-white dark:bg-slate-700 rounded-md">
-                                                    <span  className="font-bold">{item.header}</span>
-                                                </div>
-                                            )}
-                                            <div
-                                                className={`grid grid-cols-12 cursor-pointer transition duration-150 font-medium w-full text-start text-base text-slate-600 dark:text-slate-300 px-8 py-4 bg-white dark:bg-slate-700 rounded-md`}
-                                            >
-                                                <span className="col-span-2">{item.id}</span>
-                                                <span className="col-span-9">{item.question}</span>
-                                                {Data.length > 0 && (
-                                                    <span className="text-center">{Data.map((dataItem) => dataItem["eq" + item.id])}</span>
-                                                )}
-
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </Tab.Panel>
-                        </Tab.Panels>
-                    </div>
+      {/* Loading state */}
+      {isLoading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      ) : (
+        <>
+          {/* Grid of date boxes */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {Data.map((entry, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedEntry(entry)}
+                className={`border rounded-lg p-4 shadow-md text-center ${
+                  selectedEntry?._id === entry._id
+                    ? "bg-blue-100 dark:bg-blue-700 border-blue-400"
+                    : "bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600"
+                }`}
+              >
+                <div className="text-sm text-slate-600 dark:text-slate-300">
+                  {entry.date}
                 </div>
-            </Tab.Group >
-        </div >
-    );
+                <div className="text-xs text-slate-500 dark:text-slate-400">
+                  {entry.time}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Detailed Answer View */}
+          {selectedEntry && (
+            <div className="mt-10">
+              <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-white">
+                Submission from {selectedEntry.date} {selectedEntry.time}
+              </h2>
+              <div className="space-y-4">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-4 border rounded-md bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600"
+                  >
+                    <div className="text-slate-700 dark:text-white font-medium">
+                      Q{item.id}: {item.question}
+                    </div>
+                    <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                      ➡️ {selectedEntry["eq" + item.id]}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
 export default EQ5D;

@@ -17,8 +17,7 @@ const items = [
   },
   {
     id: 3,
-    question:
-      "It’s terrible and I think it’s never going to get any better.",
+    question: "It’s terrible and I think it’s never going to get any better.",
     answer: 2,
   },
   {
@@ -74,72 +73,97 @@ const items = [
 ];
 
 const PCS = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const [Data, setData] = useState([]);
+  const [selectedEntry, setSelectedEntry] = useState(null);
+
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const email = params.get("email");
+
   useEffect(() => {
     if (email) {
-
+      setIsLoading(true);
       axios
         .get(`${API}/getpcss?email=${email}`)
         .then((response) => {
-          setData(response.data);
-          // console.log(response.data)
+          const sortedData = response.data.sort((a, b) => {
+            const dateA = new Date(`${a.date} ${a.time}`);
+            const dateB = new Date(`${b.date} ${b.time}`);
+            return dateB - dateA; // Descending order
+          });
+          setData(sortedData);
+          if (sortedData.length > 0) {
+            setSelectedEntry(sortedData[0]);
+          }
+          setIsLoading(false);
         })
         .catch((error) => {
-          console.error("Error fetching answers:", error);
+          console.error("Error fetching PCS data:", error);
+          setIsLoading(false);
         });
     }
   }, [email]);
 
   return (
-    <div>
-      <Tab.Group>
-        <div className="grid gap-5 grid-cols-12">
-          <div className="xl:col-span-12 lg:col-span-12 md:col-span-9 col-span-12">
-            <Tab.Panels>
-              <Tab.Panel>
-                <div className="space-y-1">
-                  <div>
-                    <div className="accordion shadow-base dark:shadow-none rounded-md">
-                      <div className="flex justify-between cursor-pointer transition duration-150 font-medium w-full text-start text-base text-slate-600 dark:text-slate-300 px-8 py-4 bg-white dark:bg-slate-700  rounded-md">
-                        <span>PCS</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="accordion shadow-base dark:shadow-none rounded-md">
-                      <div className="flex justify-between cursor-pointer transition duration-150 font-medium w-full text-start text-base text-slate-600 dark:text-slate-300 px-8 py-4 bg-white dark:bg-slate-700 rounded-md">
-                        <span>SI NO</span>
-                        <span>Question</span>
-                        <span>Answers</span>
-                      </div>
-                    </div>
-                  </div>
+    <div className="p-6 space-y-8">
+      <h1 className="text-2xl font-bold text-slate-800 dark:text-white">
+        PCS Submissions
+      </h1>
 
-                  {items.map((item, index) => (
-                    <div
-                      className="accordion shadow-base dark:shadow-none rounded-md"
-                      key={index}
-                    >
-                      <div
-                        className={`grid grid-cols-12 cursor-pointer transition duration-150 font-medium w-full text-start text-base text-slate-600 dark:text-slate-300 px-8 py-4 bg-white dark:bg-slate-700 rounded-md`}
-                      >
-                        <span className="col-span-2">{item.id}</span>
-                        <span className="col-span-9">{item.question}</span>
-                        {Data.length > 0 && (
-                          <span className="text-center">{Data.map((dataItem) => dataItem["S" + item.id])}</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Tab.Panel>
-            </Tab.Panels>
-          </div>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
-      </Tab.Group>
+      ) : (
+        <>
+          {/* Grid of Dates */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {Data.map((entry, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedEntry(entry)}
+                className={`border rounded-lg p-4 shadow-md text-center ${
+                  selectedEntry?._id === entry._id
+                    ? "bg-blue-100 dark:bg-blue-700 border-blue-400"
+                    : "bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600"
+                }`}
+              >
+                <div className="text-sm text-slate-600 dark:text-slate-300">
+                  {entry.date}
+                </div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">
+                  {entry.time}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Show Answers */}
+          {selectedEntry && (
+            <div className="mt-10">
+              <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-white">
+                Submission from {selectedEntry.date} {selectedEntry.time}
+              </h2>
+              <div className="space-y-4">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-4 border rounded-md bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600"
+                  >
+                    <div className="text-slate-700 dark:text-white font-medium">
+                      Q{item.id}: {item.question}
+                    </div>
+                    <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                      ➡️ {selectedEntry["S" + item.id]}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
