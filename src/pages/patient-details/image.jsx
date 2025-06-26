@@ -6,12 +6,6 @@ import { API } from "../../host";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Card from "../../components/ui/Card";
 
-
-const normalizeDate = (rawDate) => {
-  const date = new Date(rawDate);
-  return date.toISOString().split("T")[0]; // YYYY-MM-DD
-};
-
 const Images = () => {
   const [groupedData, setGroupedData] = useState({});
   const [rangeData, setRangeData] = useState([]);
@@ -163,11 +157,6 @@ const Images = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-                {/* {
-        words.map((word) => {
-          return <h1 key={word.id}>{word.spellingWords}</h1>;
-        })
-      } */}
                 {groupedData[selectedDate]
                   ?.slice()
                   .reverse()
@@ -177,7 +166,7 @@ const Images = () => {
                       .filter((img) => img)
                       .map((img, idx) => 
                         {
-                          {console.log("imagedata",`https://newapi.diagnostica.app/images/${img}`)}
+                          // {console.log("imagedata",`https://newapi.diagnostica.app/images/${img}`)}
                           return (
                         <Card key={img + idx} className="p-4 rounded-md">
                           <div className="bg-white relative h-[350px] flex flex-col justify-center items-center rounded-md">
