@@ -163,6 +163,11 @@ const Images = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                {/* {
+        words.map((word) => {
+          return <h1 key={word.id}>{word.spellingWords}</h1>;
+        })
+      } */}
                 {groupedData[selectedDate]
                   ?.slice()
                   .reverse()
@@ -170,7 +175,10 @@ const Images = () => {
                     return ["img1", "img2", "img3", "img4", "img5", "img6"]
                       .map((key) => entry[key])
                       .filter((img) => img)
-                      .map((img, idx) => (
+                      .map((img, idx) => 
+                        {
+                          {console.log("imagedata",`https://newapi.diagnostica.app/images/${img}`)}
+                          return (
                         <Card key={img + idx} className="p-4 rounded-md">
                           <div className="bg-white relative h-[350px] flex flex-col justify-center items-center rounded-md">
                             <TransformWrapper initialScale={1}>
@@ -202,7 +210,7 @@ const Images = () => {
                             </TransformWrapper>
                           </div>
                         </Card>
-                      ));
+                      )});
                   })}
               </div>
             </div>
