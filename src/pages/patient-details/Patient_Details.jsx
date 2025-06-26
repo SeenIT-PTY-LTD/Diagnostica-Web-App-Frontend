@@ -47,198 +47,52 @@ const Patient_Details = () => {
   return (
     <div>
       <Tab.Group>
-        <div className="grid gap-1 grid-cols-12">
-          <div className="xl:col-span-3 lg:col-span-4 col-span-12 card-auto-height">
-            <Card>
-              <div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Name{" "}
-                  </p>
-                  <p>: {Data?.fname}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    DOB{" "}
-                  </p>
-                  <p>: {Data?.dob}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Gender{" "}
-                  </p>
-                  <p>: {Data?.gender}</p>
-                </div>
-               
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Phone{" "}
-                  </p>
-                  <p>: {Data?.phone}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Address{" "}
-                  </p>
-                  <p>: {Data?.address}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    State{" "}
-                  </p>
-                  <p>: {Data?.state}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Postcode{" "}
-                  </p>
-                  <p>: {Data?.postcode}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Patient URN{" "}
-                  </p>
-                  <p>: </p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Medicare Number{" "}
-                  </p>
-                  <p>: </p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Height{" "}
-                  </p>
-                  <p>: {Data?.height}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Weight{" "}
-                  </p>
-                  <p>: {Data?.weight}</p>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    BMI
-                  </p>
-                  <p>: {Data?.bmi}</p>
-                </div> <div style={{ display: "flex" }}>
-                  <p
-                    style={{
-                      width: "80px",
-                      textAlign: "left",
-                      marginRight: "10px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Email{" "}
-                  </p>
-                  <p style={{ fontSize: "15px" }}>: {Data?.email}</p>
-                </div>
-              </div>
-            </Card>
-          </div>
-          <div className="xl:col-span-9 lg:col-span-8 col-span-12">
-            <Tab.Panels>
-              <Tab.Panel>
-                <Row className="mb-1" data={RowData} />
-                <Row1 className="mb-1" data={RowData} />
-                <Row2 className="mb-1" data={RowData} />
-                {/* <Row3 className="mb-1" data={RowData} /> */}
-                {/* <Row8 className="mb-1" data={RowData} /> */}
-                <Row4 className="mb-1" data={RowData} />
-                <Row5 className="mb-1" data={RowData} />
-                <Row6 className="mb-1" data={RowData} />
-                <Row7 data={RowData} />
-              </Tab.Panel>
-            </Tab.Panels>
-          </div>
+        <div className="grid gap-4 grid-cols-12">
+  {/* Increase user details width */}
+<div className="xl:col-span-4 lg:col-span-5 md:col-span-6 col-span-12 card-auto-height">
+  <Card>
+    <div className="space-y-2">
+      {[
+        ["Name", Data?.fname],
+        ["DOB", Data?.dob],
+        ["Gender", Data?.gender],
+        ["Phone", Data?.phone],
+        ["Address", Data?.address],
+        ["State", Data?.state],
+        ["Postcode", Data?.postcode],
+        ["Patient URN", ""],
+        ["Medicare Number", ""],
+        ["Height", Data?.height],
+        ["Weight", Data?.weight],
+        ["BMI", Data?.bmi],
+        ["Email", Data?.email],
+      ].map(([label, value], index) => (
+        <div key={index} className="flex items-start">
+          <p className="w-36 min-w-[9rem] text-left font-bold">{label}</p>
+          <p className="flex-1 break-words">: {value || "-"}</p>
         </div>
+      ))}
+    </div>
+  </Card>
+</div>
+
+
+  {/* Rest of the panel */}
+  <div className="xl:col-span-8 lg:col-span-7 md:col-span-6 col-span-12">
+    <Tab.Panels>
+      <Tab.Panel>
+        <Row className="mb-1" data={RowData} />
+        <Row1 className="mb-1" data={RowData} />
+        <Row2 className="mb-1" data={RowData} />
+        <Row4 className="mb-1" data={RowData} />
+        <Row5 className="mb-1" data={RowData} />
+        <Row6 className="mb-1" data={RowData} />
+        <Row7 data={RowData} />
+      </Tab.Panel>
+    </Tab.Panels>
+  </div>
+</div>
+
       </Tab.Group>
     </div>
   );
