@@ -152,6 +152,32 @@ const Patient_Details = () => {
                       fontWeight: "bold",
                     }}
                   >
+                    Patient URN{" "}
+                  </p>
+                  <p>: </p>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <p
+                    style={{
+                      width: "80px",
+                      textAlign: "left",
+                      marginRight: "10px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Medicare Number{" "}
+                  </p>
+                  <p>: </p>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <p
+                    style={{
+                      width: "80px",
+                      textAlign: "left",
+                      marginRight: "10px",
+                      fontWeight: "bold",
+                    }}
+                  >
                     Height{" "}
                   </p>
                   <p>: {Data?.height}</p>
