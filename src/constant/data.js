@@ -1,3 +1,4 @@
+
 export const menuItems = [
   {
     isHeadr: true,
@@ -21,6 +22,12 @@ export const menuItems = [
     isHide: true,
     icon: "heroicons-outline:user-group",
     link: "doctors"
+  },
+  {
+    title: "Referrals",
+    isHide: true,
+    icon: "material-symbols-light:partner-exchange",
+    link: "referrals"
   }
 ];
 

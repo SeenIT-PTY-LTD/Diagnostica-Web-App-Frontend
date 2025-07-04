@@ -30,6 +30,8 @@ import OtpVerify from "./pages/auth/otpverification";
 import ResetPassword from "./pages/auth/changepassword";
 import Page8 from "./pages/components/Page8";
 import UpdatePatient from "./pages/patient/UpdatePatientForm";
+import Referrals from "./pages/referrals/index";
+
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -77,6 +79,7 @@ function App() {
         <Route path="/*" element={token ? <Layout token={token}/> : <Navigate to='/' />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="patient" element={<Patient Current_user ={Current_user}/>} />
+          <Route path="referrals" element={<Referrals/>} />
           <Route path="doctors" element={<Doctor Current_user ={Current_user}/>} />
           <Route path="view" element={<Viewpage token={token}/>} />
           <Route path="form" element={<DoctorForm />} />

@@ -1,0 +1,108 @@
+pipeline{
+agent any
+
+tools {
+nodejs "NodeJS_16"
+}
+environment {
+AUDIT_REPORT_JSON = 'audit.json'
+TRIVY_REPORT_HTML = 'trivy-report.html'
+AWS_CREDENTIAL_ID = 'AWS-Diag-id'
+S3_BUCKET = 'diagnosticatest.in'
+REGION = 'us-east-1'
+}
+
+stages {
+stage('Clone Repo') {
+steps {
+git url: ' https://github.com/SeenIT-PTY-LTD/Diagnostica-Web-App-Frontend.git',
+credentialsId: 'Diagnostica-app',
+branch: 'test'
+}
+}
+
+stage('Install Dependencies'){
+steps{
+echo 'Cleaning npm cache...'
+sh 'npm cache clean --force'
+echo 'Installing dependencies with --legacy-peer-deps...'
+sh 'npm install --legacy-peer-deps'
+}
+}
+
+stage('Build') {
+steps {
+sh 'npm run build'
+}
+}
+
+/*
+stage('Run Unit Test'){
+steps{
+sh 'npm test || true'
+}
+}
+
+*/
+
+stage('SonarQube Analysis') {
+environment {
+JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
+PATH = "${JAVA_HOME}/bin:${env.PATH}"
+}
+steps {
+withSonarQubeEnv('SonarQube') {
+withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+sh '''
+java -version
+/opt/sonar-scanner/bin/sonar-scanner \
+-Dsonar.projectKey=Diag-test-frontend \
+-Dsonar.sources=. \
+-Dsonar.host.url=http://69.62.83.226:9000 \
+-Dsonar.login=$SONAR_TOKEN
+'''
+}
+}
+}
+}
+
+stage('Trivy Scan (Security & Secrets'){
+steps{
+echo 'Running Trivy scan...'
+sh '''
+trivy fs \
+--scanners vuln,secret \
+--exit-code 0 \
+--severity HIGH,CRITICAL \
+--format template \
+--template "@/usr/local/share/trivy/templates/html.tpl" \
+--output trivy-report.html \
+.
+'''
+}
+}
+
+stage('Upload to S3') {
+steps {
+withAWS(credentials: "${AWS_CREDENTIAL_ID}", region: "${REGION}") {
+sh 'aws s3 sync dist/ s3://${S3_BUCKET}/ --delete'
+}
+}
+}
+
+
+}
+post {
+always {
+echo '✅ Pipeline finished. Archiving Trivy HTML report...'
+
+archiveArtifacts artifacts: 'trivy-report.html', fingerprint: true
+
+publishHTML(target: [
+reportDir: '.',
+reportFiles: 'trivy-report.html',
+reportName: 'Trivy Vulnerability Report'
+])
+}
+}
+}
