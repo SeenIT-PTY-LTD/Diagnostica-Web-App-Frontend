@@ -3,7 +3,7 @@ import { useState ,useEffect,useRef,useMemo} from "react";
 
 export const DropdownWithSearch = ({
   options,
-  placeholder = 'Search..',
+  placeholder = 'Search...',
   selectedValue,
   onSelect
 }) => {
