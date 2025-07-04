@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { emailValidation, validateFildWith50Length, validateMobile } from "../../utils/validators";
 import { API } from "../../host";
 import { DropdownWithSearch } from "../../components/ui/DropDownWithSearch";
+import LoaderCircle from "../../components/Loader-circle";
 
 const Referrals = () => {
 
@@ -25,7 +26,9 @@ const Referrals = () => {
   const [ part , setPart] = useState('')
   const [ bodyPartsOptions, setBodyPartsOptions ] = useState(["Head", "Shoulders", "Knees", "Toes"]);
   const [ doctorList , setDoctorList ] = useState([]);
-  const [ selectedDoctor , setSelectedDoctor ] = useState({})
+  const [ selectedDoctor , setSelectedDoctor ] = useState({});
+  const [ isLoader , setIsLoader ] = useState(false)
+
 
   /***     handle changes  */
   // set fullname
@@ -83,8 +86,13 @@ const Referrals = () => {
     const emailValidate = emailValidation(email);
     if(!emailValidate['isSuccess']) return toast.error(emailValidate['message']);
 
+    if(!selectedDoctor)
+      return toast.error("Referred Doctor is required")
+
     if(Object.keys(selectedDoctor).length == 0 && !selectedDoctor['value'] )
       return toast.error("Referred Doctor is required")
+    
+   
 
     if(!part.trim().length){
       return toast.error('Please select a Body Part')
@@ -105,20 +113,25 @@ const Referrals = () => {
     }
 
     try {
+      setIsLoader(true)
       const response = await axios.post(`${API}/referral`, payload);
      
       if( response.status == 200){
+        setIsLoader(false)
         return toast.success("Referral added successfully")
       }else{
+        setIsLoader(false)
         let message = 'Something went wroung'
         if(response.data['message']){
           message = response.data.message
         }
         return toast.error(message)
       }
+      
       // optionally reset or navigate
     } catch (err) {
        console.log(err)
+       setIsLoader(false)
        return toast.error(err.message)
     }
   };
@@ -126,12 +139,14 @@ const Referrals = () => {
 
   // fetch body parts
   const fetchBodyParts = async() =>{
+  
     let response = await axios.get(`${API}/body-part`);
     return response
   }
 
   useEffect(() =>{
     (async function(){
+    
       let result = await fetchBodyParts();
 
       if( result.status == 200){
@@ -140,14 +155,15 @@ const Referrals = () => {
         setBodyPartsOptions(bodyParts)
       }
 
+
     })()
   },[])
 
   // fetch doctors
-    const fetchDoctors = async() =>{
-      let response = await axios.get(`${API}/get-doctors`);
-      return response
-    }
+  const fetchDoctors = async() =>{
+    let response = await axios.get(`${API}/get-doctors`);
+    return response
+  }
 
   useEffect(() =>{
     (async function(){
@@ -170,8 +186,12 @@ const Referrals = () => {
     })()
   },[])
 
-  return (
-    <Card title="Referrals">
+  return (<>
+
+    {
+      isLoader ? 
+        <LoaderCircle/>
+      :  <Card title="Referrals">
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         {errors.length > 0 && (
@@ -223,7 +243,7 @@ const Referrals = () => {
         {/* Referred By */}
         <div>
           <label className="block font-medium">Referred By</label>
-          <DropdownWithSearch options={doctorList}  onSelect={setSelectedDoctor}/>
+          <DropdownWithSearch options={doctorList} selectedValue={selectedDoctor} onSelect={setSelectedDoctor}/>
         </div>
 
         <div className="flex flex-col">
@@ -246,7 +266,7 @@ const Referrals = () => {
             </div>
           ))}
         </fieldset>
-    
+       
         <button
           type="submit"
           className="w-full py-2.5 bg-blue-600 text-white  rounded"
@@ -255,6 +275,9 @@ const Referrals = () => {
         </button>
       </form>
     </Card>
+    }
+  </>
+   
   );
 };
 
