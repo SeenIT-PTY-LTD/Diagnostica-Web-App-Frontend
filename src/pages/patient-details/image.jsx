@@ -178,7 +178,7 @@ const Images = () => {
                                 <>
                                   <TransformComponent>
                                     <img
-                                      src={`https://newapi.diagnostica.app/images/${img}`}
+                                      src={`${API}/images/${img}`}
                                       alt="Pain submission"
                                       className="max-h-[300px] object-contain"
                                     />
