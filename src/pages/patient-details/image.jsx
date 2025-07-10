@@ -178,7 +178,7 @@ const Images = () => {
                                 <>
                                   <TransformComponent>
                                     <img
-                                      src={`${API}/images/${img}`}
+                                      src={`https://d2l873mxalz3b9.cloudfront.net/images/${img}`}
                                       alt="Pain submission"
                                       className="max-h-[300px] object-contain"
                                     />
