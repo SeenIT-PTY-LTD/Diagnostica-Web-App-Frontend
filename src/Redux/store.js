@@ -1,9 +1,11 @@
 // src/app/store.js
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./features/auth/authSlice";
+import patientReducer from "./features/patient/patientApiSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    patients: patientReducer,
   },
 });

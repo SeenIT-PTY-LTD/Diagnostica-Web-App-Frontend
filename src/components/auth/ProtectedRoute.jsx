@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ children }) => {
   const { auth } = useSelector((state) => state);
-  console.log("auth",auth);
-  
 
   if (!auth.token) {
     // Changed from `if (!auth)` to check specifically for token

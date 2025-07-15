@@ -8,7 +8,7 @@ import {
   User,
   BriefcaseMedical,
 } from "lucide-react";
-import logobg from "../../assets/img/logobg.png";
+import logo from "../../assets/img/logo.png";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +42,7 @@ const Sidebar = () => {
               isCollapsed ? "justify-center w-full" : ""
             }`}
           >
-            <img src={logobg} alt="Logo" className="rounded-full w-12 h-10" />
+            <img src={logo} alt="Logo" className="rounded-full w-12 h-10" />
             {!isCollapsed && (
               <span className="ml-3 font-semibold text-lg">
                 <p className="text-blue-600">Diagnostica</p>
