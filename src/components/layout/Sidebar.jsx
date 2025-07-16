@@ -74,6 +74,7 @@ const Sidebar = () => {
             icon={<User size={isCollapsed ? 22 : 20} />}
             text="Patient"
             isCollapsed={isCollapsed}
+            matchPaths={["/edit-patient", "/view-patient"]}
           />
           <SidebarLink
             to="/doctor"
@@ -112,9 +113,13 @@ const Sidebar = () => {
   );
 };
 
-const SidebarLink = ({ to, icon, text, isCollapsed }) => {
+const SidebarLink = ({ to, icon, text, isCollapsed, matchPaths = [] }) => {
   const location = useLocation();
-  const isActive = location.pathname === to;
+  const currentPath = location.pathname;
+
+  const isActive =
+    currentPath === to ||
+    matchPaths.some((path) => currentPath.startsWith(path));
 
   return (
     <Link

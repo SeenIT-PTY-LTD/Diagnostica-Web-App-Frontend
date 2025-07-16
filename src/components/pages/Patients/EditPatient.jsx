@@ -15,7 +15,6 @@ const EditPatient = () => {
   const navigate = useNavigate();
   const { id: patientId } = useParams();
   const { selectedPatient, loading } = useSelector((state) => state.patients);
-  console.log("selectedPatient:", selectedPatient);
 
   const [formReady, setFormReady] = useState(false);
 

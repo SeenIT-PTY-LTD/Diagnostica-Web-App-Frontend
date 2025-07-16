@@ -40,10 +40,39 @@ export const updatePatient = createAsyncThunk(
   }
 );
 
+// New Thunk: Fetch sections by bodyPartId
+export const fetchAppointmentByPatientId = createAsyncThunk(
+  "patients/fetch-appoinment-by-patient",
+  async (patientId, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/appointment/fetch-appoinment-by-patient?patientId=${patientId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const fetchSectionsByBodyPartId = createAsyncThunk(
+  "patients/fetchSectionsByBodyPartId",
+  async (bodyPartId, { rejectWithValue }) => {
+    try {
+      const filters = encodeURIComponent(JSON.stringify({ bodyPartId }));
+      const response = await api.get(`/section?filters=${filters}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+
 const patientSlice = createSlice({
   name: "patients",
   initialState: {
     data: [],
+    appointmentUserData: [],
+    sectionData: [],
     selectedPatient: null,
     loading: false,
     error: null,
@@ -88,7 +117,36 @@ const patientSlice = createSlice({
       .addCase(updatePatient.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Update failed";
+      })
+
+      // Section data fetch by patientId
+      .addCase(fetchAppointmentByPatientId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAppointmentByPatientId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.appointmentUserData = action.payload.result || [];
+      })
+      .addCase(fetchAppointmentByPatientId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch patient sections";
+      })
+
+        // Section data fetch
+      .addCase(fetchSectionsByBodyPartId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSectionsByBodyPartId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.sectionData = action.payload.result || [];
+      })
+      .addCase(fetchSectionsByBodyPartId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch sections";
       });
+
   },
 });
 

@@ -11,7 +11,8 @@ import Patients from "./components/pages/Patients/Patients";
 import { Toaster } from "react-hot-toast";
 import EditPatient from "./components/pages/Patients/EditPatient";
 import ViewPatient from "./components/pages/Patients/ViewPatient";
-import StaticImages from "./common/Image";
+import Image from "./common/Image";
+import MOXFQ from "./components/pages/Patients/FootAndAnkleParts/MOXFQ";
 
 const App = () => {
   const { auth } = useSelector((state) => state);
@@ -47,7 +48,8 @@ const App = () => {
           <Route path="/patient" element={<Patients />} />
           <Route path="/edit-patient/:id" element={<EditPatient />} />
           <Route path="/view-patient/:id" element={<ViewPatient />} />
-          <Route path="/view-img" element={<StaticImages />} />
+          <Route path="/view-img" element={<Image />} />
+          <Route path="/faq-moxfq" element={<MOXFQ />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
