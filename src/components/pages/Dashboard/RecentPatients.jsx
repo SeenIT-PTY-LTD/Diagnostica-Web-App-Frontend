@@ -1,4 +1,4 @@
-import Table from "../../../common/table";
+import Table from "../../../common/Table";
 import usePatients from "../../../hooks/usePatients";
 
 const fields = [

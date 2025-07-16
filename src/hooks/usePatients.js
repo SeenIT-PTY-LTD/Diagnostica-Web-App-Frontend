@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPatients } from "../Redux/features/patient/patientApiSlice";
+import { fetchPatients } from "../redux/features/patient/patientApiSlice";
 
 const usePatients = (page = 1, size = 5) => {
     const dispatch = useDispatch();

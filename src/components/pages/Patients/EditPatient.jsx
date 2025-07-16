@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+import { useNavigate, useParams } from "react-router-dom";
+// import { LockClosedIcon } from '@heroicons/react/24/solid';
+import { useFormik } from "formik";
 import { patientSchema } from "../../../validation/patientValidation";
 import {
   updatePatient,
   fetchSinglePatient,
-} from "../../../Redux/features/patient/patientApiSlice";
-import { showToast } from "../../../common/showToast";
+} from "../../../redux/features/patient/patientApiSlice";
+import { showToast } from "../../../common/ShowToast";
 
 const EditPatient = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id: patientId } = useParams();
   const { selectedPatient, loading } = useSelector((state) => state.patients);
+  console.log("selectedPatient:", selectedPatient);
+
   const [formReady, setFormReady] = useState(false);
 
   useEffect(() => {
@@ -41,17 +45,15 @@ const EditPatient = () => {
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
-        const response = await dispatch(
-          updatePatient({ id: patientId, values })
-        ).unwrap();
+        await dispatch(updatePatient({ id: patientId, values })).unwrap();
         showToast("success", "Patient bio updated!");
+        navigate("/patient");
       } catch (error) {
         showToast("error", error.message || "Failed to update patient");
       }
     },
   });
-  console.log("formik",formik);
-  
+  console.log("formik values:", formik);
 
   if (!formReady) {
     return (
@@ -62,90 +64,101 @@ const EditPatient = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-start justify-center py-10 px-4">
+    <div className="min-h-screen bg-gray-50 flex justify-start pt-16 px-4">
       <div className="w-full max-w-lg">
-        <Formik
-          initialValues={formik.initialValues}
-          validationSchema={patientSchema}
+        <form
           onSubmit={formik.handleSubmit}
-          enableReinitialize
+          className="bg-white p-6 shadow-lg rounded-lg"
         >
-          {({ errors, touched }) => (
-            <Form className="bg-white p-6 shadow-lg rounded-lg">
-              <h2 className="text-xl font-bold mb-4">Edit Patient Bio</h2>
+          <div className="flex flex-col items-start">
+            <h2 className="mt-3 text-start text-2xl font-bold text-gray-900">
+              Edit Patient Bio
+            </h2>
+          </div>
 
-              {[
-                { name: "firstName", placeholder: "First Name" },
-                { name: "lastName", placeholder: "Last Name" },
-                { name: "patientCode", placeholder: "Patient Code" },
-                { name: "phone", placeholder: "Phone Number", type: "text" },
-                { name: "dob", placeholder: "Date of Birth", type: "date" },
-                { name: "gender", placeholder: "Gender" },
-                { name: "country", placeholder: "Country" },
-                { name: "medicareNumber", placeholder: "Medicare Number" },
-                { name: "address", placeholder: "Address" },
-                { name: "state", placeholder: "State" },
-                { name: "postcode", placeholder: "Postcode" },
-                { name: "height", placeholder: "Height" },
-                { name: "weight", placeholder: "Weight" },
-              ].map(({ name, placeholder, type = "text" }) => (
-                <div key={name} className="mb-4">
-                  <Field
-                    type={type}
-                    name={name}
-                    placeholder={placeholder}
-                    className={`w-full border p-3 rounded ${
-                      errors[name] && touched[name]
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  <ErrorMessage
-                    name={name}
-                    component="div"
-                    className="text-red-500 text-xs mt-1"
-                  />
-                </div>
-              ))}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition-colors ${
-                  loading ? "opacity-75 cursor-not-allowed" : ""
-                }`}
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Submitting...
-                  </span>
-                ) : (
-                  "Submit"
+          <div className="space-y-5 mt-6">
+            {[
+              { name: "firstName", label: "First Name" },
+              { name: "lastName", label: "Last Name" },
+              { name: "phone", label: "Phone Number" },
+              { name: "patientCode", label: "Patient Code" },
+              { name: "dob", label: "Date of Birth", type: "date" },
+              { name: "gender", label: "Gender" },
+              { name: "country", label: "Country" },
+              { name: "medicareNumber", label: "Medicare Number" },
+              { name: "address", label: "Address" },
+              { name: "state", label: "State" },
+              { name: "postcode", label: "Postcode" },
+              { name: "height", label: "Height" },
+              { name: "weight", label: "Weight" },
+            ].map(({ name, label, type = "text" }) => (
+              <div key={name}>
+                <label
+                  htmlFor={name}
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  {label}
+                </label>
+                <input
+                  id={name}
+                  name={name}
+                  type={type}
+                  value={formik.values[name]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className={`w-full border p-3 rounded-md shadow-sm ${
+                    formik.errors[name] && formik.touched[name]
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                />
+                {formik.errors[name] && formik.touched[name] && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {formik.errors[name]}
+                  </p>
                 )}
-              </button>
-            </Form>
-          )}
-        </Formik>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-700 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                loading ? "opacity-75 cursor-not-allowed" : ""
+              }`}
+            >
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                "Submit"
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
