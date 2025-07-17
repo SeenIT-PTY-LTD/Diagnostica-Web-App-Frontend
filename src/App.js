@@ -52,7 +52,7 @@ const App = () => {
           <Route path="/view-img" element={<Image />} />
           <Route path="/faq-moxfq" element={<MOXFQ />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/diagnostica-form" element={<DiagnosticaCodeForm />} />
+          <Route path="/diagnostica-form/:id" element={<DiagnosticaCodeForm />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,20 +1,43 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Card from "../../../../common/Card";
+import { footAndAnkelsOptions } from "./Options";
+import { createDiagnostic } from "../../../../redux/features/diagnostica/Diagnostica";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { showToast } from "../../../../common/ShowToast";
 
 const DiagnosticaCodeForm = () => {
+  const dispatch = useDispatch();
+  const { id: patientId } = useParams();
   const [step, setStep] = useState(1);
-
   const [formData, setFormData] = useState({
     code: "",
     side: "",
     aetiology: "",
-    area: "",
-    bone: "",
-    ligament: "",
-    tendon: "",
+    disease: "",
+    condition: "",
+    region: "",
+    bones: "",
+    ligaments: "",
+    tendons: "",
     nerves: "",
     joints: "",
     skin: "",
+    fracture: "",
+    ligament: "",
+    tendinopathy: "",
+    osteoarthritis: "",
+    inflammatoryArthritis: "",
+    misc: "",
+    joint: "",
+    softTissue: "",
+    boneLesion: "",
+    neurological: "",
+    Score_1: "",
+    Score_2: "",
+    Score_3: "",
+    patient: "",
+    comment: "",
   });
 
   const handleChange = (e) => {
@@ -22,24 +45,105 @@ const DiagnosticaCodeForm = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const anatomicalAreas = [
-    { value: "head", label: "Head" },
-    { value: "neck", label: "Neck" },
-    { value: "torso", label: "Torso" },
-    { value: "limb", label: "Limb" },
-    // Add more if needed
-  ];
+  const generateCode = useCallback(() => {
+    let code = "";
 
-  const displayCode = `:${
-    formData.aetiology
-      ? ` ${
-          formData.aetiology.charAt(0).toUpperCase() +
-          formData.aetiology.slice(1)
-        }`
-      : ""
-  } :${formData.side ? ` ${formData.side.charAt(0).toUpperCase()}` : ""} :${
-    formData.area ? ` ${formData.area.charAt(0).toUpperCase()}` : ""
-  } :`;
+    if (formData.side) code += `:${formData.side}`;
+    if (formData.disease) code += `${formData.disease}`;
+    if (formData.condition) code += `${formData.condition}`;
+    if (formData.region) code += `${formData.region}`;
+
+    const anatomy = [
+      formData.bones,
+      formData.ligaments,
+      formData.tendons,
+      formData.nerves,
+      formData.joints,
+      formData.skin,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    if (anatomy) code += ` ${anatomy}`;
+
+    const step5 = [
+      formData.fracture,
+      formData.ligament,
+      formData.tendinopathy,
+      formData.osteoarthritis,
+      formData.inflammatoryArthritis,
+      formData.misc,
+      formData.joint,
+      formData.softTissue,
+      formData.boneLesion,
+      formData.neurological,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    if (step5) code += ` ${step5}`;
+
+    const step6 = [formData.Score_1, formData.Score_2, formData.Score_3]
+      .filter(Boolean)
+      .join(" ");
+    if (step6) code += ` ${step6}`;
+
+    if (formData.patient) code += `${formData.patient}`;
+
+    return code;
+  }, [
+    formData.side,
+    formData.disease,
+    formData.condition,
+    formData.region,
+    formData.bones,
+    formData.ligaments,
+    formData.tendons,
+    formData.nerves,
+    formData.joints,
+    formData.skin,
+    formData.fracture,
+    formData.ligament,
+    formData.tendinopathy,
+    formData.osteoarthritis,
+    formData.inflammatoryArthritis,
+    formData.misc,
+    formData.joint,
+    formData.softTissue,
+    formData.boneLesion,
+    formData.neurological,
+    formData.Score_1,
+    formData.Score_2,
+    formData.Score_3,
+    formData.patient,
+  ]);
+
+  const handleSubmit = () => {
+    const finalCode = generateCode();
+
+    const diagnosticData = {
+      code: finalCode,
+      doctorId: "657d3cc03100a7e6de4d9d39",
+      step: step,
+      patientId: patientId,
+      comment: formData.comment,
+    };
+
+    dispatch(createDiagnostic(diagnosticData))
+      .unwrap()
+      .then((res) => {
+        showToast("success", res?.message);
+      })
+      .catch((err) => {
+        showToast("error", err?.message);
+      });
+  };
+
+  useEffect(() => {
+    const finalCode = generateCode();
+    setFormData((prev) => ({
+      ...prev,
+      code: finalCode,
+    }));
+  }, [generateCode, setFormData]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -60,10 +164,10 @@ const DiagnosticaCodeForm = () => {
               type="text"
               id="code"
               name="code"
-              value={step === 3 ? displayCode : formData.code}
-              placeholder={step === 3 ? "" : "DIAGNOSTICA CODE"}
-              disabled={step === 3}
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={step >= 1 ? generateCode() : formData.code}
+              placeholder="DIAGNOSTICA CODE"
+              readOnly
+              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
             />
           </div>
 
@@ -78,29 +182,22 @@ const DiagnosticaCodeForm = () => {
               </p>
 
               <div className="flex items-center justify-center gap-10 mt-4">
-                <label className="inline-flex items-center text-sm text-gray-700">
-                  <input
-                    type="radio"
-                    name="side"
-                    value="left"
-                    checked={formData.side === "left"}
-                    onChange={handleChange}
-                    className="form-radio text-blue-600"
-                  />
-                  <span className="ml-2">LEFT</span>
-                </label>
-
-                <label className="inline-flex items-center text-sm text-gray-700">
-                  <input
-                    type="radio"
-                    name="side"
-                    value="right"
-                    checked={formData.side === "right"}
-                    onChange={handleChange}
-                    className="form-radio text-blue-600"
-                  />
-                  <span className="ml-2">RIGHT</span>
-                </label>
+                {footAndAnkelsOptions.form1.sides.map((side) => (
+                  <label
+                    key={side.value}
+                    className="inline-flex items-center text-sm text-gray-700"
+                  >
+                    <input
+                      type="radio"
+                      name="side"
+                      value={side.value}
+                      checked={formData.side === side.value}
+                      onChange={handleChange}
+                      className="form-radio text-blue-600"
+                    />
+                    <span className="ml-2">{side.label}</span>
+                  </label>
+                ))}
               </div>
             </div>
           )}
@@ -114,30 +211,75 @@ const DiagnosticaCodeForm = () => {
                 </span>
               </p>
 
-              <div className="flex items-center justify-center gap-20 mt-4">
-                <label className="inline-flex items-center text-sm text-gray-700">
-                  <input
-                    type="radio"
-                    name="aetiology"
-                    value="acquired"
-                    checked={formData.aetiology === "acquired"}
-                    onChange={handleChange}
-                    className="form-radio text-blue-600"
-                  />
-                  <span className="ml-2">Acquired</span>
-                </label>
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center justify-center gap-20">
+                  {footAndAnkelsOptions.form2.map((option) => (
+                    <label
+                      key={option.option}
+                      className="inline-flex items-center text-sm text-gray-700"
+                    >
+                      <input
+                        type="radio"
+                        name="aetiology"
+                        value={option.option}
+                        checked={formData.aetiology === option.option}
+                        onChange={handleChange}
+                        className="form-radio text-blue-600"
+                      />
+                      <span className="ml-2">{option.option}</span>
+                    </label>
+                  ))}
+                </div>
 
-                <label className="inline-flex items-center text-sm text-gray-700">
-                  <input
-                    type="radio"
-                    name="aetiology"
-                    value="congenital"
-                    checked={formData.aetiology === "congenital"}
-                    onChange={handleChange}
-                    className="form-radio text-blue-600"
-                  />
-                  <span className="ml-2">Congenital</span>
-                </label>
+                {formData.aetiology && (
+                  <div className="mt-4">
+                    <div className="mb-4">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Disease:
+                      </label>
+                      <select
+                        name="disease"
+                        value={formData.disease}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select Disease</option>
+                        {footAndAnkelsOptions.form2
+                          .find((opt) => opt.option === formData.aetiology)
+                          ?.disease.map((item) => (
+                            <option key={item.value} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+
+                    {footAndAnkelsOptions.form2.find(
+                      (opt) => opt.option === formData.aetiology
+                    )?.condition.length > 0 && (
+                      <div className="mb-4">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Condition:
+                        </label>
+                        <select
+                          name="condition"
+                          value={formData.condition}
+                          onChange={handleChange}
+                          className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="">Select Condition</option>
+                          {footAndAnkelsOptions.form2
+                            .find((opt) => opt.option === formData.aetiology)
+                            ?.condition.map((item) => (
+                              <option key={item.value} value={item.value}>
+                                {item.label}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -152,13 +294,13 @@ const DiagnosticaCodeForm = () => {
               </p>
 
               <select
-                name="area"
-                value={formData.area}
+                name="region"
+                value={formData.region}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Select...</option>
-                {anatomicalAreas.map((area) => (
+                <option value="">Select Region...</option>
+                {footAndAnkelsOptions.form3.foot.map((area) => (
                   <option key={area.value} value={area.value}>
                     {area.label}
                   </option>
@@ -178,73 +320,461 @@ const DiagnosticaCodeForm = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <select
-                  name="bone"
-                  value={formData.bone}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Bone</option>
-                  <option value="humerus">Humerus</option>
-                  <option value="femur">Femur</option>
-                  <option value="tibia">Tibia</option>
-                </select>
+                {/* Bones */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Bones:
+                  </label>
+                  <select
+                    name="bones"
+                    value={formData.bones}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Bone</option>
+                    {footAndAnkelsOptions.form4.bones.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                <select
-                  name="ligament"
-                  value={formData.ligament}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Ligament</option>
-                  <option value="acl">ACL</option>
-                  <option value="pcl">PCL</option>
-                </select>
+                {/* Ligaments */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Ligaments:
+                  </label>
+                  <select
+                    name="ligaments"
+                    value={formData.ligaments}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Ligament</option>
+                    {footAndAnkelsOptions.form4.ligaments.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                <select
-                  name="tendon"
-                  value={formData.tendon}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Tendon</option>
-                  <option value="achilles">Achilles</option>
-                  <option value="patellar">Patellar</option>
-                </select>
+                {/* Tendons */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Tendons:
+                  </label>
+                  <select
+                    name="tendons"
+                    value={formData.tendons}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Tendon</option>
+                    {footAndAnkelsOptions.form4.tendons.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                <select
-                  name="nerves"
-                  value={formData.nerves}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Nerve</option>
-                  <option value="sciatic">Sciatic</option>
-                  <option value="ulnar">Ulnar</option>
-                </select>
+                {/* Nerves */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Nerves:
+                  </label>
+                  <select
+                    name="nerves"
+                    value={formData.nerves}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Nerve</option>
+                    {footAndAnkelsOptions.form4.nerves.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                <select
-                  name="joints"
-                  value={formData.joints}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Joint</option>
-                  <option value="knee">Knee</option>
-                  <option value="elbow">Elbow</option>
-                </select>
+                {/* Joints */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Joints:
+                  </label>
+                  <select
+                    name="joints"
+                    value={formData.joints}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Joint</option>
+                    {footAndAnkelsOptions.form4.joints.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                <select
-                  name="skin"
-                  value={formData.skin}
-                  onChange={handleChange}
-                  className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Skin Area</option>
-                  <option value="scalp">Scalp</option>
-                  <option value="forearm">Forearm</option>
-                </select>
+                {/* Skin */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Skin:
+                  </label>
+                  <select
+                    name="skin"
+                    value={formData.skin}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Skin Area</option>
+                    {footAndAnkelsOptions.form4.skin.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
+            </div>
+          )}
+
+          {step === 5 && (
+            <div className="mb-8">
+              <p className="font-semibold text-sm text-gray-800 mb-4">
+                STEP 5:{" "}
+                <span className="font-normal">
+                  We assign letters for the individual conditions (Pathology),
+                  AND The Diagnostica code would be further extended with a
+                  description of the condition.
+                </span>
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Fracture */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Fracture:
+                  </label>
+                  <select
+                    name="fracture"
+                    value={formData.fracture}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Fracture</option>
+                    {footAndAnkelsOptions.form5.fracture.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Ligaments */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Ligaments:
+                  </label>
+                  <select
+                    name="ligament"
+                    value={formData.ligament}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Ligament</option>
+                    {footAndAnkelsOptions.form5.ligament.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Tedinopathy */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Tedinopathy:
+                  </label>
+                  <select
+                    name="tendinopathy"
+                    value={formData.tendinopathy}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Tedinopathy</option>
+                    {footAndAnkelsOptions.form5?.tendinopathy.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Osteoarthritis */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Osteoarthritis:
+                  </label>
+                  <select
+                    name="osteoarthritis"
+                    value={formData.osteoarthritis}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Osteoarthritis</option>
+                    {footAndAnkelsOptions.form5?.osteoarthritis.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Inflammatory Arthiritis */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Inflammatory Arthiritis:
+                  </label>
+                  <select
+                    name="inflammatoryArthritis"
+                    value={formData.inflammatoryArthritis}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Arthiritis</option>
+                    {footAndAnkelsOptions.form5?.inflammatoryArthritis.map(
+                      (item) => (
+                        <option key={item.value} value={item.value}>
+                          {item.label}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+
+                {/* Misc */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Misc:
+                  </label>
+                  <select
+                    name="misc"
+                    value={formData.misc}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Misc</option>
+                    {footAndAnkelsOptions.form5?.misc.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Joints */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Joints:
+                  </label>
+                  <select
+                    name="joint"
+                    value={formData.joint}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Joint</option>
+                    {footAndAnkelsOptions.form5?.joint.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Soft tissue lesion */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Soft tissue lesion:
+                  </label>
+                  <select
+                    name="softTissue"
+                    value={formData.softTissue}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select softTissue</option>
+                    {footAndAnkelsOptions.form5?.softTissue.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Bone lesion */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Bone lesion:
+                  </label>
+                  <select
+                    name="boneLesion"
+                    value={formData.boneLesion}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select boneLesion</option>
+                    {footAndAnkelsOptions.form5?.boneLesion.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Neurological */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Neurological:
+                  </label>
+                  <select
+                    name="neurological"
+                    value={formData.neurological}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select neurological</option>
+                    {footAndAnkelsOptions.form5?.neurological.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 6 && (
+            <div className="mb-8">
+              <p className="font-semibold text-sm text-gray-800 mb-4">
+                STEP 6:{" "}
+                <span className="font-normal">
+                  The Diagnostica code can be extended to account for
+                  comorbidity descriptors. We can use Charlson Comorbidity Index
+                  (CCI) as the added descriptor.
+                </span>
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* SCORE 1 */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    SCORE 1:
+                  </label>
+                  <select
+                    name="Score_1"
+                    value={formData.Score_1}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Score 1</option>
+                    {footAndAnkelsOptions.form6?.scores?.Score_1.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* SCORE 2 */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    SCORE 2:
+                  </label>
+                  <select
+                    name="Score_2"
+                    value={formData.Score_2}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Score 2</option>
+                    {footAndAnkelsOptions.form6?.scores?.Score_2.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* SCORE 3 */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    SCORE 3&6:
+                  </label>
+                  <select
+                    name="Score_3"
+                    value={formData.Score_3}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select Score 3&6</option>
+                    {footAndAnkelsOptions.form6?.scores?.Score_3.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 7 && (
+            <div className="mb-8">
+              <p className="font-semibold text-sm text-gray-800 mb-4">
+                STEP 7:{" "}
+                <span className="font-normal">
+                  If the Patient has surgery, then American Society of
+                  Anaesthesiologists (ASA) Classifications can be added.
+                </span>
+              </p>
+
+              <select
+                name="patient"
+                value={formData.patient}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Select Region...</option>
+                {footAndAnkelsOptions.form7?.patient.map((area) => (
+                  <option key={area.value} value={area.value}>
+                    {area.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {step === 8 && (
+            <div className="mb-8">
+              <p className="font-semibold text-sm text-gray-800 mb-4">
+                STEP 8: <span className="font-normal">Comment section.</span>
+              </p>
+
+              <textarea
+                name="comment"
+                value={formData.comment}
+                onChange={handleChange}
+                placeholder="Enter your comments..."
+                rows={4}
+                className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              ></textarea>
             </div>
           )}
 
@@ -277,15 +807,53 @@ const DiagnosticaCodeForm = () => {
               type="button"
               className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
               onClick={() => {
-                if (step < 4) {
+                if (step < 8) {
                   setStep((prev) => prev + 1);
                 } else {
-                  console.log("Final Data Submitted:", formData);
-                  // Perform submission here
+                  // Final step: set final code, then dispatch
+                  handleSubmit();
+                  console.log("Final Data Submitted:", {
+                    ...formData,
+                    code: generateCode(),
+                  });
                 }
               }}
+              disabled={
+                (step === 1 && !formData.side) ||
+                (step === 2 &&
+                  (!formData.aetiology ||
+                    !formData.disease ||
+                    (footAndAnkelsOptions.form2.find(
+                      (opt) => opt.option === formData.aetiology
+                    )?.condition.length > 0 &&
+                      !formData.condition))) ||
+                (step === 3 && !formData.region) ||
+                (step === 4 &&
+                  !formData.bones &&
+                  !formData.ligaments &&
+                  !formData.tendons &&
+                  !formData.nerves &&
+                  !formData.joints &&
+                  !formData.skin) ||
+                (step === 5 &&
+                  !formData.fracture &&
+                  !formData.ligament &&
+                  !formData.osteoarthritis &&
+                  !formData.inflammatoryArthritis &&
+                  !formData.misc &&
+                  !formData.joint &&
+                  !formData.softTissue &&
+                  !formData.boneLesion &&
+                  !formData.neurological) ||
+                (step === 6 &&
+                  !formData.Score_1 &&
+                  !formData.Score_2 &&
+                  !formData.Score_3) ||
+                (step === 7 && !formData.patient) ||
+                (step === 8 && !formData.comment)
+              }
             >
-              {step === 4 ? "Submit" : "Next"}
+              {step === 8 ? "Submit" : "Next"}
             </button>
           </div>
         </Card>

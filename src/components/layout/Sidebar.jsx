@@ -74,7 +74,7 @@ const Sidebar = () => {
             icon={<User size={isCollapsed ? 22 : 20} />}
             text="Patient"
             isCollapsed={isCollapsed}
-            matchPaths={["/edit-patient", "/view-patient"]}
+            matchPaths={["/edit-patient", "/view-patient", "/diagnostica-form"]}
           />
           <SidebarLink
             to="/doctor"
