@@ -13,6 +13,7 @@ import EditPatient from "./components/pages/Patients/EditPatient";
 import ViewPatient from "./components/pages/Patients/ViewPatient";
 import Image from "./common/Image";
 import MOXFQ from "./components/pages/Patients/FootAndAnkleParts/MOXFQ";
+import DiagnosticaCodeForm from "./components/pages/Patients/Diagnostica/Forms";
 
 const App = () => {
   const { auth } = useSelector((state) => state);
@@ -51,6 +52,7 @@ const App = () => {
           <Route path="/view-img" element={<Image />} />
           <Route path="/faq-moxfq" element={<MOXFQ />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/diagnostica-form" element={<DiagnosticaCodeForm />} />
         </Route>
       </Routes>
     </BrowserRouter>

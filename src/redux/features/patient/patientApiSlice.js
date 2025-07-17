@@ -126,7 +126,7 @@ const patientSlice = createSlice({
       })
       .addCase(fetchAppointmentByPatientId.fulfilled, (state, action) => {
         state.loading = false;
-        state.appointmentUserData = action.payload.result || [];
+        state.appointmentUserData = action.payload.result?.list || [];
       })
       .addCase(fetchAppointmentByPatientId.rejected, (state, action) => {
         state.loading = false;
@@ -140,7 +140,7 @@ const patientSlice = createSlice({
       })
       .addCase(fetchSectionsByBodyPartId.fulfilled, (state, action) => {
         state.loading = false;
-        state.sectionData = action.payload.result || [];
+        state.sectionData = action.payload.result?.list || [];
       })
       .addCase(fetchSectionsByBodyPartId.rejected, (state, action) => {
         state.loading = false;
