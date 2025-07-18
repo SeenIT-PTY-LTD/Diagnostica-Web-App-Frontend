@@ -14,6 +14,19 @@ export const createDiagnostic = createAsyncThunk(
     }
 );
 
+// Fetch doctor
+export const fetchDiagnostica = createAsyncThunk(
+    "doctor/fetchDiagnostica",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/diagnostics`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || error.message);
+        }
+    }
+);
+
 const diagnosticsSlice = createSlice({
     name: 'diagnostics',
     initialState: {
@@ -21,6 +34,7 @@ const diagnosticsSlice = createSlice({
         error: null,
         success: false,
         diagnostic: null,
+        diagnosticaData: []
     },
     reducers: {
         resetDiagnosticState: (state) => {
@@ -39,7 +53,7 @@ const diagnosticsSlice = createSlice({
             })
             .addCase(createDiagnostic.fulfilled, (state, action) => {
                 console.log('action.payload', action.payload);
-                
+
                 state.loading = false;
                 state.success = true;
                 state.diagnostic = action.payload;
@@ -47,6 +61,18 @@ const diagnosticsSlice = createSlice({
             .addCase(createDiagnostic.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(fetchDiagnostica.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchDiagnostica.fulfilled, (state, action) => {
+                state.loading = false;
+                state.diagnosticaData = action.payload.result?.list || [];
+            })
+            .addCase(fetchDiagnostica.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || "Something went wrong";
             });
     },
 });

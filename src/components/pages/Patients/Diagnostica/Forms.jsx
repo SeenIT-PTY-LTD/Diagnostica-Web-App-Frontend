@@ -3,11 +3,12 @@ import Card from "../../../../common/Card";
 import { footAndAnkelsOptions } from "./Options";
 import { createDiagnostic } from "../../../../redux/features/diagnostica/Diagnostica";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { showToast } from "../../../../common/ShowToast";
 
 const DiagnosticaCodeForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id: patientId } = useParams();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -125,6 +126,7 @@ const DiagnosticaCodeForm = () => {
       step: step,
       patientId: patientId,
       comment: formData.comment,
+      status: "Completed"
     };
 
     dispatch(createDiagnostic(diagnosticData))
@@ -778,17 +780,11 @@ const DiagnosticaCodeForm = () => {
             </div>
           )}
 
-          <div
-            className={`flex ${
-              step === 1 ? "justify-between" : "justify-evenly"
-            }`}
-          >
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
             <button
               type="button"
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
-              onClick={() => {
-                // Cancel logic
-              }}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex-1 sm:flex-none sm:px-6"
+              onClick={() => navigate(-1)}
             >
               Cancel
             </button>
@@ -796,7 +792,7 @@ const DiagnosticaCodeForm = () => {
             {step > 1 && (
               <button
                 type="button"
-                className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex-1 sm:flex-none sm:px-6 order-first sm:order-none"
                 onClick={() => setStep((prev) => prev - 1)}
               >
                 Back
@@ -805,12 +801,11 @@ const DiagnosticaCodeForm = () => {
 
             <button
               type="button"
-              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex-1 sm:flex-none sm:px-6"
               onClick={() => {
                 if (step < 8) {
                   setStep((prev) => prev + 1);
                 } else {
-                  // Final step: set final code, then dispatch
                   handleSubmit();
                   console.log("Final Data Submitted:", {
                     ...formData,

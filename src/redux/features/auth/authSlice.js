@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../../../utils/api";
 
 const API_URL = "http://192.168.1.27:3003";
 // const API_URL = "https://d2l873mxalz3b9.cloudfront.net";
@@ -62,6 +63,19 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+// Fetch doctor
+export const fetchDoctorInfo = createAsyncThunk(
+  "doctor/fetchDoctorInfo",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/user/auth/info`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -69,7 +83,8 @@ const authSlice = createSlice({
     loading: false,
     error: null,
     forgotPasswordSuccess: null,
-    resetPasswordSuccess: null
+    resetPasswordSuccess: null,
+    doctorInfo: [],
   },
   reducers: {
     logout: (state) => {
@@ -132,7 +147,18 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload.message;
       })
-
+      .addCase(fetchDoctorInfo.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDoctorInfo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.doctorInfo = action.payload.result || [];
+      })
+      .addCase(fetchDoctorInfo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      });
   },
 });
 
