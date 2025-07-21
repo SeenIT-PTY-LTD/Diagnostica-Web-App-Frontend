@@ -52,7 +52,7 @@ const patientSlice = createSlice({
       .addCase(updatePatient.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updatePatient.fulfilled, (state, action) => {
+      .addCase(updatePatient.fulfilled, (state) => {
         state.loading = false;
       })
       .addCase(updatePatient.rejected, (state, action) => {
