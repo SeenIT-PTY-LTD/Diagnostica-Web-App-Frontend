@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const DiagnosticaList = () => {
-  const { diagnosticaData } = useSelector((state) => state.diagnostics);
+  const { diagnosticaData } = useSelector((state) => state?.diagnostics);
   
   // Format date for display
   const formatDate = (dateString) => {
@@ -13,7 +13,7 @@ const DiagnosticaList = () => {
       hour: '2-digit', 
       minute: '2-digit' 
     };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    return new Date(dateString)?.toLocaleDateString('en-US', options);
   };
 
   return (
