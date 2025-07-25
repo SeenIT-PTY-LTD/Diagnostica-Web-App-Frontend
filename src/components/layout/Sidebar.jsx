@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   User,
   BriefcaseMedical,
+  PlusIcon
 } from "lucide-react";
 import logo from "../../assets/img/logo.png";
 
@@ -74,6 +75,7 @@ const Sidebar = () => {
             icon={<User size={isCollapsed ? 22 : 20} />}
             text="Patient"
             isCollapsed={isCollapsed}
+            matchPaths={["/edit-patient", "/view-patient", "/diagnostica-form"]}
           />
           <SidebarLink
             to="/doctor"
@@ -81,12 +83,18 @@ const Sidebar = () => {
             text="Doctors"
             isCollapsed={isCollapsed}
           />
-          <SidebarLink
+           <SidebarLink
+            to="/add-doctor"
+            icon={<PlusIcon size={isCollapsed ? 22 : 20} />}
+            text="Add Doctor"
+            isCollapsed={isCollapsed}
+          />
+          {/* <SidebarLink
             to="/settings"
             icon={<Settings size={isCollapsed ? 22 : 20} />}
             text="Settings"
             isCollapsed={isCollapsed}
-          />
+          /> */}
         </nav>
 
         {/* Expand Button */}
@@ -112,9 +120,13 @@ const Sidebar = () => {
   );
 };
 
-const SidebarLink = ({ to, icon, text, isCollapsed }) => {
+const SidebarLink = ({ to, icon, text, isCollapsed, matchPaths = [] }) => {
   const location = useLocation();
-  const isActive = location.pathname === to;
+  const currentPath = location.pathname;
+
+  const isActive =
+    currentPath === to ||
+    matchPaths.some((path) => currentPath.startsWith(path));
 
   return (
     <Link

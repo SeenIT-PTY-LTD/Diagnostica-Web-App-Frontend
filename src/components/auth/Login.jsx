@@ -5,14 +5,14 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import {
   login,
   forgotPasswordByEmail,
-} from "../../Redux/features/auth/authSlice";
+} from "../../redux/features/auth/authSlice";
 import main from "../../assets/img/main.jpg";
 import logo from "../../assets/img/logo.png";
 import {
   forgotPasswordSchema,
   loginSchema,
 } from "../../validation/authValidation";
-import { showToast } from "../../common/showToast";
+import { showToast } from "../../common/ShowToast";
 
 const Login = () => {
   const [forgotPassword, setForgotPassword] = useState(false);

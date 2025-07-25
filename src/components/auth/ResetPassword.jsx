@@ -2,9 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { resetPasswordSchema } from "../../validation/authValidation";
-import { resetPassword } from "../../Redux/features/auth/authSlice";
+import { resetPassword } from "../../redux/features/auth/authSlice";
 import { useEffect } from "react";
-import { showToast } from "../../common/showToast";
+import { showToast } from "../../common/ShowToast";
 import main from "../../assets/img/main.jpg";
 import logo from "../../assets/img/logo.png";
 

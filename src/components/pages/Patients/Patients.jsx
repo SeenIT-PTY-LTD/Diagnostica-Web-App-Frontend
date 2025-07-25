@@ -1,6 +1,6 @@
-import  { useState } from "react";
+import React, { useState } from "react";
 import { Eye, Pencil } from "lucide-react";
-import Table from "../../../common/table";
+import Table from "../../../common/Table";
 import { useNavigate } from "react-router-dom";
 import usePatients from "../../../hooks/usePatients";
 
@@ -39,7 +39,7 @@ function Patients() {
       render: (_, row) => (
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => console.log("View", row)}
+            onClick={() => navigate(`/view-patient/${row._id}`)}
             className="text-blue-600 hover:text-blue-800"
           >
             <Eye size={18} />

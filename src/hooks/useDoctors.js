@@ -1,17 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDoctors } from "../redux/features/doctor/doctorApiSlice";
-import { fetchPatients } from "../redux/features/patient/patientApiSlice";
 
-const usePatients = (page = 1, size = 5) => {
+const useDoctors = (page = 1, size = 5) => {
     const dispatch = useDispatch();
-    const doctorState = useSelector((state) => state.patients);
+    const doctorState = useSelector((state) => state.doctors);
 
     useEffect(() => {
-        dispatch(fetchPatients({ page, size }));
+        dispatch(fetchDoctors({ page, size }));
     }, [dispatch, page, size]);
 
     return doctorState;
 };
 
-export default usePatients;
+export default useDoctors;
