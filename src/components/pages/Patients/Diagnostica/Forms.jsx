@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Card from "../../../../common/Card";
 import { footAndAnkelsOptions } from "./Options";
 import { createDiagnostic } from "../../../../redux/features/diagnostica/Diagnostica";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { showToast } from "../../../../common/ShowToast";
 

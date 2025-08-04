@@ -15,8 +15,8 @@ import Image from "./common/Image";
 import MOXFQ from "./components/pages/Patients/FootAndAnkleParts/MOXFQ";
 import DiagnosticaCodeForm from "./components/pages/Patients/Diagnostica/Forms";
 import HelperRoute from "./HelperRoute";
-import AddDoctor from "./components/pages/AddDoctor";
 import Doctors from "./components/pages/Doctor/Doctors";
+import AddDoctor from "./components/pages/Doctor/AddDoctor";
 
 const App = () => {
   const { auth } = useSelector((state) => state);

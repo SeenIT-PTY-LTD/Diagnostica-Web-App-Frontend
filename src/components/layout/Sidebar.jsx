@@ -82,12 +82,7 @@ const Sidebar = () => {
             icon={<BriefcaseMedical size={isCollapsed ? 22 : 20} />}
             text="Doctors"
             isCollapsed={isCollapsed}
-          />
-           <SidebarLink
-            to="/add-doctor"
-            icon={<PlusIcon size={isCollapsed ? 22 : 20} />}
-            text="Add Doctor"
-            isCollapsed={isCollapsed}
+            matchPaths={["/add-doctor"]}
           />
           {/* <SidebarLink
             to="/settings"

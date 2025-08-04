@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Eye, Pencil } from "lucide-react";
 import Table from "../../../common/Table";
+import useDoctors from "../../../hooks/useDoctors";
 import { useNavigate } from "react-router-dom";
-import useDoctors from "../../../hooks/usePatients";
 
 function Doctors() {
   const navigate = useNavigate();
@@ -10,52 +9,42 @@ function Doctors() {
   const pageSize = 3;
 
   const { data, loading, error, totalPages } = useDoctors(page, pageSize);
-  console.log(data,'****data')
+  console.log("Doctors data:", data);
+  
 
   const fields = [
-    
-    { key: "firstName", label: "name" },
-     { key: "email", label: "email" },
+    { key: "firstName", label: "Name" },
+    { key: "email", label: "Email" },
     { key: "phone", label: "Phone" },
-   
-   
-    // {
-    //   key: "action",
-    //   label: "Action",
-    //   render: (_, row) => (
-    //     <div className="flex items-center space-x-3">
-    //       <button
-    //         onClick={() => navigate(`/view-patient/${row._id}`)}
-    //         className="text-blue-600 hover:text-blue-800"
-    //       >
-    //         <Eye size={18} />
-    //       </button>
-    //       <button
-    //         onClick={() => navigate(`/edit-patient/${row._id}`)}
-    //         className="text-green-600 hover:text-green-800"
-    //       >
-    //         <Pencil size={18} />
-    //       </button>
-    //     </div>
-    //   ),
-    // },
   ];
 
   if (error) return <p>Error: {error}</p>;
+  const profileButtonClasses = `bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-500`;
 
   return (
-    <Table
-      title={`page ${page} of ${pageSize}`}
-      fields={fields}
-      data={data}
-      rowsPerPage={pageSize}
-      showSearch={true}
-      serverPagination={true}
-      currentPage={page}
-      totalCount={totalPages}
-      onPageChange={(newPage) => setPage(newPage)}
-      loading={loading}
-    />
+    <>
+      <div className="flex justify-end mb-4">
+        <button
+          className={profileButtonClasses}
+          onClick={() => navigate("/add-doctor")}
+        >
+          Add Doctor
+        </button>
+      </div>
+
+      <Table
+        title={`page ${page} of ${pageSize}`}
+        fields={fields}
+        data={data}
+        rowsPerPage={pageSize}
+        showSearch={true}
+        serverPagination={true}
+        currentPage={page}
+        totalCount={totalPages}
+        onPageChange={(newPage) => setPage(newPage)}
+        loading={loading}
+      />
+    </>
   );
 }
 
