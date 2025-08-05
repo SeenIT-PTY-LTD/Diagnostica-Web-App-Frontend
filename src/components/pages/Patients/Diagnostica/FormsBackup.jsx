@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Card from "../../../../common/Card";
 import { footAndAnkelsOptions } from "./Options";
-import {
-  createDiagnostic,
-  updateDiagnostic,
-} from "../../../../redux/features/diagnostica/Diagnostica";
+import { createDiagnostic } from "../../../../redux/features/diagnostica/Diagnostica";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { showToast } from "../../../../common/ShowToast";
@@ -15,10 +12,8 @@ const DiagnosticaCodeForm = () => {
   const location = useLocation();
   const { id: patientId } = useParams();
   const { isEdit, appointmentData } = location.state || {};
-  console.log("Diagnostica Data:", isEdit, appointmentData);
-  const { auth } = useSelector((state) => state);
-  const doctorId = auth?.doctorInfo?.[0]?._id;
-  console.log("Auth Data:", auth);
+  console.log("Diagnostica Data:", isEdit,appointmentData);
+  
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -127,72 +122,26 @@ const DiagnosticaCodeForm = () => {
     formData.patient,
   ]);
 
-  // const handleSubmit = () => {
-  //   const finalCode = generateCode();
-
-  //   const diagnosticData = {
-  //     code: finalCode,
-  //     doctorId: "657d3cc03100a7e6de4d9d39",
-  //     step: step,
-  //     patientId: patientId,
-  //     comment: formData.comment,
-  //     status: "Completed"
-  //   };
-
-  //   dispatch(createDiagnostic(diagnosticData))
-  //     .unwrap()
-  //     .then((res) => {
-  //       showToast("success", res?.message);
-  //     })
-  //     .catch((err) => {
-  //       showToast("error", err?.message);
-  //     });
-  // };
-
   const handleSubmit = () => {
     const finalCode = generateCode();
 
     const diagnosticData = {
       code: finalCode,
-      ...(isEdit ? {} : { doctorId }),
+      doctorId: "657d3cc03100a7e6de4d9d39",
       step: step,
-      ...(isEdit ? {} : { patientId: patientId }),
+      patientId: patientId,
       comment: formData.comment,
-      status: "Completed",
+      status: "Completed"
     };
 
-    if (isEdit && appointmentData?._id) {
-      dispatch(
-        updateDiagnostic({
-          id: appointmentData._id,
-          updatedData: diagnosticData,
-        })
-      )
-        .unwrap()
-        .then((res) => {
-          showToast(
-            "success",
-            res?.message || "Diagnostic updated successfully"
-          );
-          navigate(-1); // navigate back or wherever appropriate
-        })
-        .catch((err) => {
-          showToast("error", err?.message || "Failed to update diagnostic");
-        });
-    } else {
-      dispatch(createDiagnostic(diagnosticData))
-        .unwrap()
-        .then((res) => {
-          showToast(
-            "success",
-            res?.message || "Diagnostic created successfully"
-          );
-          navigate(-1);
-        })
-        .catch((err) => {
-          showToast("error", err?.message || "Failed to create diagnostic");
-        });
-    }
+    dispatch(createDiagnostic(diagnosticData))
+      .unwrap()
+      .then((res) => {
+        showToast("success", res?.message);
+      })
+      .catch((err) => {
+        showToast("error", err?.message);
+      });
   };
 
   useEffect(() => {
@@ -904,7 +853,7 @@ const DiagnosticaCodeForm = () => {
                 (step === 8 && !formData.comment)
               }
             >
-              {isEdit && step === 8 ? "Update" : step === 8 ? "Submit" : "Next"}
+              {step === 8 ? "Submit" : "Next"}
             </button>
           </div>
         </Card>

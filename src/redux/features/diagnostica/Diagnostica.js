@@ -14,7 +14,19 @@ export const createDiagnostic = createAsyncThunk(
     }
 );
 
-// Fetch doctor
+// PUT for updating a diagnostic
+export const updateDiagnostic = createAsyncThunk(
+  'diagnostics/updateDiagnostic',
+  async ({ id, updatedData }, { rejectWithValue }) => {
+    try {
+      const response = await api.put(`/diagnostics/${id}`, updatedData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Something went wrong');
+    }
+  }
+);
+
 export const fetchDiagnostica = createAsyncThunk(
     "doctor/fetchDiagnostica",
     async (_, { rejectWithValue }) => {
@@ -62,6 +74,20 @@ const diagnosticsSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            .addCase(updateDiagnostic.pending, (state) => {
+  state.loading = true;
+  state.error = null;
+})
+.addCase(updateDiagnostic.fulfilled, (state, action) => {
+  state.loading = false;
+  state.success = true;
+  state.diagnostic = action.payload;
+})
+.addCase(updateDiagnostic.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+})
+
             .addCase(fetchDiagnostica.pending, (state) => {
                 state.loading = true;
                 state.error = null;

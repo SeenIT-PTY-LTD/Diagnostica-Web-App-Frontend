@@ -1,6 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../utils/api";
 
+// Fetch dashboard count
+export const fetchDashboardCount = createAsyncThunk(
+  "dashboard/fetchDashboardCount",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/user/get-dashboard-counts`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 // Fetch paginated patients
 export const fetchPatients = createAsyncThunk(
   "patients/fetchPatients",
@@ -40,12 +53,13 @@ export const updatePatient = createAsyncThunk(
   }
 );
 
-// New Thunk: Fetch sections by bodyPartId
 export const fetchAppointmentByPatientId = createAsyncThunk(
   "patients/fetch-appoinment-by-patient",
   async (patientId, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/appointment/fetch-appoinment-by-patient?patientId=${patientId}`);
+      const response = await api.get(
+        `/appointment/fetch-appoinment-by-patient?patientId=${patientId}`
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -66,11 +80,11 @@ export const fetchSectionsByBodyPartId = createAsyncThunk(
   }
 );
 
-
 const patientSlice = createSlice({
   name: "patients",
   initialState: {
     data: [],
+    dashboardCount: [],
     appointmentUserData: [],
     sectionData: [],
     selectedPatient: null,
@@ -81,6 +95,18 @@ const patientSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchDashboardCount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDashboardCount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.dashboardCount = action.payload.result || [];
+      })
+      .addCase(fetchDashboardCount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      })
       .addCase(fetchPatients.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -133,7 +159,7 @@ const patientSlice = createSlice({
         state.error = action.payload || "Failed to fetch patient sections";
       })
 
-        // Section data fetch
+      // Section data fetch
       .addCase(fetchSectionsByBodyPartId.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -146,8 +172,8 @@ const patientSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Failed to fetch sections";
       });
-
   },
 });
 
+export const { resetPatientState } = patientSlice.actions;
 export default patientSlice.reducer;

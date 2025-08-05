@@ -1,8 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 const DiagnosticaList = () => {
+  const navigate = useNavigate();
   const { diagnosticaData } = useSelector((state) => state?.diagnostics);
+  const { id: patientId } = useParams();
   
   // Format date for display
   const formatDate = (dateString) => {
@@ -16,8 +19,18 @@ const DiagnosticaList = () => {
     return new Date(dateString)?.toLocaleDateString('en-US', options);
   };
 
+  // Handle edit action
+const handleEdit = (item) => {
+  navigate(`/diagnostica-form/${item.patientId}`, {
+    state: { 
+      isEdit: true,
+      appointmentData: item // You can pass the entire item if needed
+    }
+  });
+};
+
   return (
-   <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"> 
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"> 
       {diagnosticaData?.map((item) => (
         <div 
           key={item._id} 
@@ -90,6 +103,16 @@ const DiagnosticaList = () => {
                   </p>
                 </div>
               </div>
+            </div>
+            
+            {/* Edit Button */}
+            <div className="flex justify-end pt-4">
+              <button
+                onClick={() => handleEdit(item)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              >
+                Edit
+              </button>
             </div>
           </div>
         </div>

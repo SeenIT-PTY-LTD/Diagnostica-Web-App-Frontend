@@ -18,16 +18,20 @@ import PatientInfo from "./PatientInfo";
 const sectionComponents = {
   Images: FootAndAnkelImages,
   MOFXQ,
-  EQ5D,
+  "EQ - 5D": EQ5D,
   PCS,
-  SF36,
+  "SF - 36": SF36,
   Diagnostica,
 };
 
 const ViewPatient = () => {
   const dispatch = useDispatch();
   const { id: patientId } = useParams();
-  const { appointmentUserData, sectionData } = useSelector((state) => state.patients);
+  const { appointmentUserData, sectionData } = useSelector(
+    (state) => state.patients
+  );
+  console.log("appointmentUserData:", appointmentUserData);
+  
 
   const [formReady, setFormReady] = useState(false);
   const [activeAppointmentId, setActiveAppointmentId] = useState(null);
@@ -39,7 +43,11 @@ const ViewPatient = () => {
   );
 
   const sectionList = useMemo(
-    () => ["Patient Details", ...sectionData.map((s) => s.sectionCode), "Diagnostica"],
+    () => [
+      "Patient Details",
+      ...sectionData.map((s) => s.sectionCode),
+      "Diagnostica",
+    ],
     [sectionData]
   );
 
@@ -64,6 +72,8 @@ const ViewPatient = () => {
         (item) => item.appointmentId === activeAppointmentId
       );
 
+      console.log("selected?.bodyPartId", selected?.bodyPartId);
+      
       if (selected?.bodyPartId) {
         dispatch(fetchSectionsByBodyPartId(selected.bodyPartId));
       }
@@ -76,12 +86,18 @@ const ViewPatient = () => {
     }
 
     const SectionComponent = sectionComponents[activeSection];
-    return SectionComponent ? <SectionComponent /> : <div>No Component Found</div>;
+    return SectionComponent ? (
+      <SectionComponent />
+    ) : (
+      <div>No Component Found</div>
+    );
   };
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">View Patient Info</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">
+        View Patient Info
+      </h1>
 
       {/* Appointment buttons */}
       <div className="flex flex-wrap gap-3 mb-6">
@@ -122,6 +138,5 @@ const ViewPatient = () => {
     </div>
   );
 };
-
 
 export default ViewPatient;
