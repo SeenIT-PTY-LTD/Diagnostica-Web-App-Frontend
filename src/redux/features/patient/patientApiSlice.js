@@ -80,6 +80,20 @@ export const fetchSectionsByBodyPartId = createAsyncThunk(
   }
 );
 
+export const fetchAttemptedSectionPrompts = createAsyncThunk(
+  "patients/fetchAttemptedSectionPrompts",
+  async ({ appointmentRefId, sectionId }, { rejectWithValue }) => {
+    try {
+      const response = await api.get(
+        `/appointment/get-attempted-section-promts?appointmentRefId=${appointmentRefId}&sectionId=${sectionId}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const patientSlice = createSlice({
   name: "patients",
   initialState: {
@@ -87,6 +101,7 @@ const patientSlice = createSlice({
     dashboardCount: [],
     appointmentUserData: [],
     sectionData: [],
+    attemptedSectionPrompts: [],
     selectedPatient: null,
     loading: false,
     error: null,
@@ -171,6 +186,19 @@ const patientSlice = createSlice({
       .addCase(fetchSectionsByBodyPartId.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch sections";
+      })
+
+      .addCase(fetchAttemptedSectionPrompts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAttemptedSectionPrompts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.attemptedSectionPrompts = action.payload.result || [];
+      })
+      .addCase(fetchAttemptedSectionPrompts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch attempted section prompts";
       });
   },
 });

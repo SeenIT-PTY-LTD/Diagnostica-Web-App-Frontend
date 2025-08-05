@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAppointmentByPatientId,
+  fetchAttemptedSectionPrompts,
   fetchSectionsByBodyPartId,
 } from "../../../redux/features/patient/patientApiSlice";
 import { useParams } from "react-router-dom";
 
 // Import section components
 import FootAndAnkelImages from "./FootAndAnkleParts/FootAndAnkelImages";
-import MOFXQ from "./FootAndAnkleParts/MOXFQ";
+import MOXFQ from "./FootAndAnkleParts/MOXFQ";
 import EQ5D from "./FootAndAnkleParts/EQ5D";
 import PCS from "./FootAndAnkleParts/PCS";
 import SF36 from "./FootAndAnkleParts/SF36";
@@ -17,7 +18,7 @@ import PatientInfo from "./PatientInfo";
 
 const sectionComponents = {
   Images: FootAndAnkelImages,
-  MOFXQ,
+  MOXFQ,
   "EQ - 5D": EQ5D,
   PCS,
   "SF - 36": SF36,
@@ -30,8 +31,6 @@ const ViewPatient = () => {
   const { appointmentUserData, sectionData } = useSelector(
     (state) => state.patients
   );
-  console.log("appointmentUserData:", appointmentUserData);
-  
 
   const [formReady, setFormReady] = useState(false);
   const [activeAppointmentId, setActiveAppointmentId] = useState(null);
@@ -54,7 +53,9 @@ const ViewPatient = () => {
   // Fetch appointments on load
   useEffect(() => {
     if (patientId) {
-      dispatch(fetchAppointmentByPatientId(patientId)).then(() => setFormReady(true));
+      dispatch(fetchAppointmentByPatientId(patientId)).then(() =>
+        setFormReady(true)
+      );
     }
   }, [dispatch, patientId]);
 
@@ -73,12 +74,47 @@ const ViewPatient = () => {
       );
 
       console.log("selected?.bodyPartId", selected?.bodyPartId);
-      
+
       if (selected?.bodyPartId) {
         dispatch(fetchSectionsByBodyPartId(selected.bodyPartId));
       }
     }
   }, [activeAppointmentId, appointmentUserData, dispatch]);
+
+  // Fetch section data for selected appointment and there sub section
+  useEffect(() => {
+    if (
+      activeAppointmentId &&
+      activeSection &&
+      activeSection !== "Patient Details" &&
+      activeSection !== "Diagnostica" &&
+      appointmentUserData?.length &&
+      sectionData?.length
+    ) {
+      const selectedAppointment = appointmentUserData.find(
+        (item) => item.appointmentId === activeAppointmentId
+      );
+
+      const selectedSection = sectionData.find(
+        (section) => section.sectionCode === activeSection
+      );
+
+      if (selectedAppointment && selectedSection) {
+        dispatch(
+          fetchAttemptedSectionPrompts({
+            appointmentRefId: selectedAppointment._id,
+            sectionId: selectedSection._id,
+          })
+        );
+      }
+    }
+  }, [
+    activeAppointmentId,
+    activeSection,
+    appointmentUserData,
+    sectionData,
+    dispatch,
+  ]);
 
   const renderSection = () => {
     if (activeSection === "Patient Details") {
