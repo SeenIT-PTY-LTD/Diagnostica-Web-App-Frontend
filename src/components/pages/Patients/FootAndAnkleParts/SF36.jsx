@@ -2,24 +2,6 @@ import { useSelector } from "react-redux";
 import FAQItem from "../../../../common/FAQItem";
 
 const SF36 = () => {
-  const faqs = [
-    {
-      question: "What is your return policy?",
-      answer:
-        "You can return any unused item within 30 days of purchase for a full refund.",
-    },
-    {
-      question: "Do you offer international shipping?",
-      answer:
-        "Yes, we ship to most countries. Shipping charges and delivery time may vary.",
-    },
-    {
-      question: "How can I track my order?",
-      answer:
-        "Once your order is shipped, you'll receive an email with tracking details.",
-    },
-  ];
-
   const { attemptedSectionPrompts, loading } = useSelector(
     (state) => state.patients
   );

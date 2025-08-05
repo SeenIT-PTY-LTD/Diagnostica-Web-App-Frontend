@@ -34,7 +34,6 @@ const ViewPatient = () => {
     (state) => state.patients
   );
 
-  const [formReady, setFormReady] = useState(false);
   const [activeAppointmentId, setActiveAppointmentId] = useState(null);
   const [activeSection, setActiveSection] = useState("Patient Details");
 
@@ -57,9 +56,7 @@ const ViewPatient = () => {
     dispatch(resetAppointmentUserData());
 
     if (patientId) {
-      dispatch(fetchAppointmentByPatientId(patientId)).then(() =>
-        setFormReady(true)
-      );
+      dispatch(fetchAppointmentByPatientId(patientId))
     }
   }, [dispatch, patientId]);
 

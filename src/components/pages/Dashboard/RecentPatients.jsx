@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import Table from "../../../common/Table";
 import usePatients from "../../../hooks/usePatients";
 
