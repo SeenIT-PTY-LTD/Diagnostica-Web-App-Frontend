@@ -4,6 +4,8 @@ import {
   fetchAppointmentByPatientId,
   fetchAttemptedSectionPrompts,
   fetchSectionsByBodyPartId,
+  resetAppointmentUserData,
+  resetAttemptedSectionPrompts,
 } from "../../../redux/features/patient/patientApiSlice";
 import { useParams } from "react-router-dom";
 
@@ -14,7 +16,7 @@ import EQ5D from "./FootAndAnkleParts/EQ5D";
 import PCS from "./FootAndAnkleParts/PCS";
 import SF36 from "./FootAndAnkleParts/SF36";
 import Diagnostica from "./Diagnostica/Diagnostica";
-import PatientInfo from "./PatientInfo";
+import PatientDetails from "./PatientDetails";
 
 const sectionComponents = {
   Images: FootAndAnkelImages,
@@ -52,6 +54,8 @@ const ViewPatient = () => {
 
   // Fetch appointments on load
   useEffect(() => {
+    dispatch(resetAppointmentUserData());
+
     if (patientId) {
       dispatch(fetchAppointmentByPatientId(patientId)).then(() =>
         setFormReady(true)
@@ -72,8 +76,6 @@ const ViewPatient = () => {
       const selected = appointmentUserData.find(
         (item) => item.appointmentId === activeAppointmentId
       );
-
-      console.log("selected?.bodyPartId", selected?.bodyPartId);
 
       if (selected?.bodyPartId) {
         dispatch(fetchSectionsByBodyPartId(selected.bodyPartId));
@@ -100,6 +102,9 @@ const ViewPatient = () => {
       );
 
       if (selectedAppointment && selectedSection) {
+        // Reset the prompts before fetching new ones
+        dispatch(resetAttemptedSectionPrompts());
+
         dispatch(
           fetchAttemptedSectionPrompts({
             appointmentRefId: selectedAppointment._id,
@@ -118,7 +123,7 @@ const ViewPatient = () => {
 
   const renderSection = () => {
     if (activeSection === "Patient Details") {
-      return <PatientInfo />;
+      return <PatientDetails />;
     }
 
     const SectionComponent = sectionComponents[activeSection];

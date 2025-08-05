@@ -107,7 +107,15 @@ const patientSlice = createSlice({
     error: null,
     totalPages: 0,
   },
-  reducers: {},
+  reducers: {
+    resetAttemptedSectionPrompts: (state) => {
+      state.attemptedSectionPrompts = [];
+    },
+    resetAppointmentUserData: (state) => {
+      state.appointmentUserData = [];
+      state.sectionData = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchDashboardCount.pending, (state) => {
@@ -198,10 +206,12 @@ const patientSlice = createSlice({
       })
       .addCase(fetchAttemptedSectionPrompts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "Failed to fetch attempted section prompts";
+        state.error =
+          action.payload || "Failed to fetch attempted section prompts";
       });
   },
 });
 
-export const { resetPatientState } = patientSlice.actions;
+export const { resetAttemptedSectionPrompts, resetAppointmentUserData } =
+  patientSlice.actions;
 export default patientSlice.reducer;

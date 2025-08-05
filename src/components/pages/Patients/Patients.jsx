@@ -10,7 +10,6 @@ function Patients() {
   const pageSize = 3;
 
   const { data, loading, error, totalPages } = usePatients(page, pageSize);
-console.log("Patients data:", data);
 
   const fields = [
     {
