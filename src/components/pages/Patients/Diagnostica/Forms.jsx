@@ -154,9 +154,9 @@ const DiagnosticaCodeForm = () => {
 
     const diagnosticData = {
       code: finalCode,
-      ...(isEdit ? {} : { doctorId }),
+      ...(isEdit===true ? {} : { doctorId: doctorId }),
       step: step,
-      ...(isEdit ? {} : { patientId: patientId }),
+      ...(isEdit===true ? {} : { patientId: patientId }),
       comment: formData.comment,
       status: "Completed",
     };

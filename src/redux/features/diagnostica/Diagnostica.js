@@ -29,9 +29,13 @@ export const updateDiagnostic = createAsyncThunk(
 
 export const fetchDiagnostica = createAsyncThunk(
   "doctor/fetchDiagnostica",
-  async (_, { rejectWithValue }) => {
+  async (filters = {}, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/diagnostics`);
+      const query = new URLSearchParams({
+        filters: JSON.stringify(filters),
+      }).toString();
+
+      const response = await api.get(`/diagnostics?${query}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
