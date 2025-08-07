@@ -6,11 +6,10 @@ import { useNavigate } from "react-router-dom";
 function Doctors() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const pageSize = 3;
+  const pageSize = 5;
 
   const { data, loading, error, totalPages } = useDoctors(page, pageSize);
-  console.log("Doctors data:", data);
-  
+  const totalPagesData = Math.ceil(totalPages / pageSize);
 
   const fields = [
     { key: "firstName", label: "Name" },
@@ -33,7 +32,7 @@ function Doctors() {
       </div>
 
       <Table
-        title={`page ${page} of ${pageSize}`}
+        title={`page ${page} of ${totalPagesData}`}
         fields={fields}
         data={data}
         rowsPerPage={pageSize}
