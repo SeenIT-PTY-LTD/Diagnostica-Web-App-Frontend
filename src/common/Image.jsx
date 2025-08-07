@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Card from "./Card";
 import { useSelector } from "react-redux";
+import { formatDate } from "../utils/dateFormat";
 
 const Image = () => {
   const { attemptedSectionPrompts, loading } = useSelector(
@@ -17,39 +18,62 @@ const Image = () => {
       <h1 className="text-2xl font-bold text-slate-800 dark:text-white">
         Pain Image Submissions
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {loading ? (
-          <div className="flex justify-center items-center py-10">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
-          </div>
-        ) : attemptedSectionPrompts.length === 0 ? (
-          <div className="flex justify-start items-start py-10 min-h-[200px]">
-            <p className="text-gray-500 font-bold text-lg">No data found</p>
-          </div>
-        ) : (
-          attemptedSectionPrompts?.map((img, idx) => {
-            const imageUrl = img.img?.startsWith("http")
-              ? img.img
-              : `http://192.168.0.104:3003/images/${img.img?.replace(
-                  /^\/+/,
-                  ""
-                )}`;
 
-            return (
-              <Card key={img + idx}>
-                <div className="space-y-2">
-                  <img
-                    src={imageUrl}
-                    alt={`Pain submission ${idx + 1}`}
-                    className="max-h-[300px] object-contain cursor-zoom-in mx-auto"
-                    onClick={() => openModal(imageUrl)}
-                  />
-                </div>
-              </Card>
-            );
-          })
-        )}
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center py-10">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
+        </div>
+      ) : attemptedSectionPrompts.length === 0 ? (
+        <div className="flex justify-start items-start py-10 min-h-[200px]">
+          <p className="text-gray-500 font-bold text-lg">No data found</p>
+        </div>
+      ) : (
+        attemptedSectionPrompts?.map((dateGroup, dateIdx) => (
+          <div key={dateGroup.date + dateIdx} className="space-y-4">
+            {/* Date Header */}
+            <div className="border-b border-gray-200 dark:border-gray-700 pb-2">
+              <h2 className="text-xl font-semibold text-slate-700 dark:text-gray-300">
+                {formatDate(dateGroup.date)}
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {dateGroup.data.length} submission
+                {dateGroup.data.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+            {/* Images Grid for this date */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {dateGroup.data.map((item, itemIdx) => {
+                const imageUrl = item.img?.startsWith("http")
+                  ? item.img
+                  : `http://localhost:3003/images/${item.img?.replace(
+                      /^\/+/,
+                      ""
+                    )}`;
+                return (
+                  <Card key={`${dateGroup.date}-${itemIdx}`}>
+                    <div className="space-y-3">
+                      <img
+                        src={imageUrl}
+                        alt={`Pain submission ${itemIdx + 1}`}
+                        className="max-h-[300px] object-contain cursor-zoom-in mx-auto"
+                        onClick={() => openModal(imageUrl)}
+                      />
+
+                      {/* Display question and answer info */}
+                      <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <p className="text-sm text-gray-500">
+                          Answer:{" "}
+                          <span className="font-medium">{item.answer}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        ))
+      )}
 
       {/* Zoom modal */}
       {zoomedImage && (
@@ -63,7 +87,7 @@ const Image = () => {
             className="max-h-[90vh] max-w-[90vw] object-contain"
           />
           <button
-            className="absolute top-4 right-4 text-white text-3xl"
+            className="absolute top-4 right-4 text-white text-3xl hover:text-gray-300 transition-colors"
             onClick={closeModal}
           >
             &times;

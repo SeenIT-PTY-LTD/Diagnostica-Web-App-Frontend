@@ -21,9 +21,17 @@ const EQ5D = () => {
           <p className="text-gray-500 font-bold text-lg">No data found</p>
         </div>
       ) : (
-        attemptedSectionPrompts.map((faq, index) => (
-          <FAQItem key={index} {...faq} />
-        ))
+        attemptedSectionPrompts.map((section) =>
+          section.data.map((faq, index) => (
+            <FAQItem
+              key={faq.question + index}
+              question={faq.question}
+              answer={faq.answer}
+              number={index + 1}
+              date={index === 0 ? section.date : null} // only show date once
+            />
+          ))
+        )
       )}
     </div>
   );

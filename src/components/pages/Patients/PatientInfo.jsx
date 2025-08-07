@@ -73,7 +73,6 @@ const PatientInfo = () => {
     }
   };
 
-
   if (!formReady) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -81,22 +80,26 @@ const PatientInfo = () => {
       </div>
     );
   }
+
   return (
-    <div className="max-w-xl w-full p-4 bg-white rounded-lg border border-gray-200">
-      <div className="grid grid-cols-1 gap-5">
+    <div className="max-w-lg w-full mx-auto p-4 sm:p-5 bg-white rounded-lg border border-gray-200 shadow-sm">
+      <div className="grid grid-cols-1 gap-3">
         {selectedPatient.map((patient) =>
           labels.map((label) => (
-            <div key={`${patient._id}-${label}`}>
-              <div className="flex justify-between items-center text-base py-2">
-                <span className="font-semibold text-gray-800 w-1/3">
+            <>
+              <div
+                key={`${patient._id}-${label}`}
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm sm:text-base py-2 gap-1 sm:gap-3"
+              >
+                <span className="font-medium text-gray-800 w-full sm:w-1/3 break-words">
                   {label}
                 </span>
-                <span className="text-gray-700 w-2/3 text-center">
+                <span className="text-gray-700 w-full sm:w-2/3 break-words whitespace-pre-wrap text-left sm:text-right">
                   {getValueByLabel(label, patient)}
                 </span>
               </div>
-              <div className="border-b border-gray-200"></div>
-            </div>
+              <div className="w-full border-b border-gray-200 mt-0"></div>
+            </>
           ))
         )}
       </div>

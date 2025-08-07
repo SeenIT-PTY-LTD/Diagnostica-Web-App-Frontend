@@ -68,8 +68,6 @@ const diagnosticsSlice = createSlice({
         state.success = false;
       })
       .addCase(createDiagnostic.fulfilled, (state, action) => {
-        console.log("action.payload", action.payload);
-
         state.loading = false;
         state.success = true;
         state.diagnostic = action.payload;

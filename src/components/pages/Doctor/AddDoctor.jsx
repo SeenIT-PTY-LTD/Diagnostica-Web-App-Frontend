@@ -30,7 +30,6 @@ const AddDoctor = () => {
     onSubmit: async (values) => {
       try {
         let response = await dispatch(addDoctor(values)).unwrap();
-        console.log(response, "***response");
         if (response["isSuccess"]) {
           showToast("success", "Doctor added successfully!");
           navigate("/doctor");

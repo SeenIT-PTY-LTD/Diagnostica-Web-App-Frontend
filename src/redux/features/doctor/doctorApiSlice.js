@@ -79,7 +79,6 @@ const doctorSlice = createSlice({
       })
       .addCase(fetchDoctors.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload.result,'**********result')
         state.data = action.payload.result.list || [];
         state.totalPages = action.payload?.result.count || 0;
       })

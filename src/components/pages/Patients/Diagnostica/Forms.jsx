@@ -15,10 +15,8 @@ const DiagnosticaCodeForm = () => {
   const location = useLocation();
   const { id: patientId } = useParams();
   const { isEdit, appointmentData } = location.state || {};
-  console.log("Diagnostica Data:", isEdit, appointmentData);
   const { auth } = useSelector((state) => state);
   const doctorId = auth?.doctorInfo?.[0]?._id;
-  console.log("Auth Data:", auth);
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({

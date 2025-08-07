@@ -30,7 +30,7 @@ const sectionComponents = {
 const ViewPatient = () => {
   const dispatch = useDispatch();
   const { id: patientId } = useParams();
-  const { appointmentUserData, sectionData } = useSelector(
+  const { appointmentUserData, sectionData, selectedPatient } = useSelector(
     (state) => state.patients
   );
 
@@ -56,7 +56,7 @@ const ViewPatient = () => {
     dispatch(resetAppointmentUserData());
 
     if (patientId) {
-      dispatch(fetchAppointmentByPatientId(patientId))
+      dispatch(fetchAppointmentByPatientId(patientId));
     }
   }, [dispatch, patientId]);
 
@@ -134,7 +134,9 @@ const ViewPatient = () => {
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        View Patient Info
+        View{" "}
+        {`${selectedPatient?.[0]?.firstName} ${selectedPatient?.[0]?.lastName}`}{" "}
+        Info
       </h1>
 
       {/* Appointment buttons */}

@@ -52,7 +52,6 @@ const EditPatient = () => {
       }
     },
   });
-  console.log("formik values:", formik);
 
   if (!formReady) {
     return (

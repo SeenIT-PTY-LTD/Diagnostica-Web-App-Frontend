@@ -1,10 +1,11 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/features/auth/authSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { auth } = useSelector((state) => state);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -12,19 +13,16 @@ const Header = () => {
   };
 
   const headerClasses = `bg-white text-black p-4 flex justify-between items-center`;
-  const profileButtonClasses = `bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-500`;
   const logoutButtonClasses = `bg-red-600 text-white px-4 py-2 rounded hover:bg-red-500`;
 
   return (
     <header className={headerClasses}>
       <h1 className="text-xl font-bold">My App</h1>
       <div className="flex items-center space-x-4">
-        <button
-          className={profileButtonClasses}
-          onClick={() => navigate("/patient")}
-        >
-          Profile
-        </button>
+        <p className="text-gray-500 font-bold text-lg">
+          {`${auth?.doctorInfo?.[0]?.firstName} ${auth?.doctorInfo?.[0]?.lastName}`}{" "}
+        </p>
+
         <button className={logoutButtonClasses} onClick={handleLogout}>
           Logout
         </button>

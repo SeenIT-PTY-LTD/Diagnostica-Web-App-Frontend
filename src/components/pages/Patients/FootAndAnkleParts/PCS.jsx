@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import FAQItem from "../../../../common/FAQItem";
 
-const PCS = () => {
+const PCS= () => {
   const { attemptedSectionPrompts, loading } = useSelector(
     (state) => state.patients
   );
@@ -11,6 +11,7 @@ const PCS = () => {
       <h2 className="text-2xl font-bold mb-6 text-gray-800 text-left">
         Frequently Asked Questions
       </h2>
+
       {loading ? (
         <div className="flex justify-center items-center py-10">
           <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
@@ -20,9 +21,17 @@ const PCS = () => {
           <p className="text-gray-500 font-bold text-lg">No data found</p>
         </div>
       ) : (
-        attemptedSectionPrompts.map((faq, index) => (
-          <FAQItem key={index} {...faq} />
-        ))
+        attemptedSectionPrompts.map((section) =>
+          section.data.map((faq, index) => (
+            <FAQItem
+              key={faq.question + index}
+              question={faq.question}
+              answer={faq.answer}
+              number={index + 1}
+              date={index === 0 ? section.date : null} // only show date once
+            />
+          ))
+        )
       )}
     </div>
   );

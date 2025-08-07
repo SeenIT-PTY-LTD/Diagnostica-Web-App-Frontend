@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -7,11 +7,17 @@ import {
   LayoutDashboard,
   User,
   BriefcaseMedical,
-  PlusIcon
+  PlusIcon,
+  ArrowRight,
 } from "lucide-react";
 import logo from "../../assets/img/logo.png";
+import imageLogo from "../../assets/img/image-logo.png";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/features/auth/authSlice";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -19,6 +25,10 @@ const Sidebar = () => {
     isOpen ? "translate-x-0" : "-translate-x-full"
   } md:translate-x-0 md:relative ${isCollapsed ? "w-20" : "w-64"}`;
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
   return (
     <>
       {/* Mobile Toggle Button */}
@@ -43,10 +53,14 @@ const Sidebar = () => {
               isCollapsed ? "justify-center w-full" : ""
             }`}
           >
-            <img src={logo} alt="Logo" className="rounded-full w-12 h-10" />
+            {isCollapsed && (
+              <img src={logo} alt="Logo" className="rounded-full w-12 h-10" />
+            )}
             {!isCollapsed && (
               <span className="ml-3 font-semibold text-lg">
-                <p className="text-blue-600">Diagnostica</p>
+                <p className="text-blue-600">
+                  <img src={imageLogo} alt="Logo" />
+                </p>
               </span>
             )}
           </div>
@@ -100,6 +114,16 @@ const Sidebar = () => {
             aria-label="Expand sidebar"
           >
             <Menu size={20} />
+          </button>
+        )}
+
+        {!isCollapsed && (
+          <button
+            className="absolute bottom-4 left-4 text-black hover:bg-gray-200 p-2 rounded-full flex items-center gap-2"
+            onClick={handleLogout}
+            aria-label="Logout"
+          >
+            <ArrowRight size={20} /> Logout
           </button>
         )}
       </div>
