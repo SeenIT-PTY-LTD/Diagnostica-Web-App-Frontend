@@ -17,12 +17,14 @@ import DiagnosticaCodeForm from "./components/pages/Patients/Diagnostica/Forms";
 import HelperRoute from "./HelperRoute";
 import Doctors from "./components/pages/Doctor/Doctors";
 import AddDoctor from "./components/pages/Doctor/AddDoctor";
+import ErrorBoundary from "./common/ErrorBoundary";
 
 const App = () => {
   const { auth } = useSelector((state) => state);
 
   return (
     <BrowserRouter>
+    <ErrorBoundary>
     <HelperRoute/>
       <Toaster position="top-center" reverseOrder={false} />
 
@@ -61,6 +63,7 @@ const App = () => {
           <Route path="/diagnostica-form/:id" element={<DiagnosticaCodeForm />} />
         </Route>
       </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 };
