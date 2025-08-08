@@ -8,7 +8,7 @@ import { formatDateMMDDYYYY } from "../../../utils/dateFormat";
 function Patients() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const pageSize = 3;
+  const pageSize = 5;
 
   const { data, loading, error, totalPages } = usePatients(page, pageSize);
 
