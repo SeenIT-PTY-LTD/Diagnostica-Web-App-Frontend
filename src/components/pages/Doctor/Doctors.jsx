@@ -22,14 +22,14 @@ function Doctors() {
 
   return (
     <>
-      <div className="flex justify-end mb-4">
+      {/* <div className="flex justify-end mb-4">
         <button
           className={profileButtonClasses}
           onClick={() => navigate("/add-doctor")}
         >
           Add Doctor
         </button>
-      </div>
+      </div> */}
 
       <Table
         title={`page ${page} of ${totalPagesData}`}

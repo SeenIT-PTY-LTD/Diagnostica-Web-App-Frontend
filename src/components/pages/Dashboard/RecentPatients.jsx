@@ -1,5 +1,6 @@
 import Table from "../../../common/Table";
 import usePatients from "../../../hooks/usePatients";
+import { formatDateMMDDYYYY } from "../../../utils/dateFormat";
 
 const fields = [
   {
@@ -20,7 +21,11 @@ const fields = [
   },
   { key: "firstName", label: "Patient" },
   { key: "phone", label: "Phone" },
-  { key: "dob", label: "DOB" },
+  {
+    key: "dob",
+    label: "DOB",
+    render: (value) => formatDateMMDDYYYY(value),
+  },
   { key: "gender", label: "Gender" },
   { key: "address", label: "Address" },
 ];
