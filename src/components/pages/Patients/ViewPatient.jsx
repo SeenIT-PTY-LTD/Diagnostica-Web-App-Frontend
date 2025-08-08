@@ -17,6 +17,7 @@ import PCS from "./FootAndAnkleParts/PCS";
 import SF36 from "./FootAndAnkleParts/SF36";
 import Diagnostica from "./Diagnostica/Diagnostica";
 import PatientDetails from "./PatientDetails";
+import DateRangePicker from "../../../common/DateRangePicker";
 
 const sectionComponents = {
   Images: FootAndAnkelImages,
@@ -36,6 +37,13 @@ const ViewPatient = () => {
 
   const [activeAppointmentId, setActiveAppointmentId] = useState(null);
   const [activeSection, setActiveSection] = useState("Patient Details");
+  const [dates, setDates] = useState({
+    startDate: null,
+    endDate: null,
+  });
+
+  const shouldShowDatePicker =
+    activeSection !== "Patient Details" && activeSection !== "Diagnostica";
 
   const appointmentIds = useMemo(
     () => appointmentUserData?.map((item) => item.appointmentId) || [],
@@ -50,6 +58,10 @@ const ViewPatient = () => {
     ],
     [sectionData]
   );
+
+  const handleDateChange = ({ startDate, endDate }) => {
+    setDates({ startDate, endDate });
+  };
 
   // Fetch appointments on load
   useEffect(() => {
@@ -106,6 +118,8 @@ const ViewPatient = () => {
           fetchAttemptedSectionPrompts({
             appointmentRefId: selectedAppointment._id,
             sectionId: selectedSection._id,
+            startDate: dates.startDate,
+            endDate: dates.endDate,
           })
         );
       }
@@ -115,6 +129,8 @@ const ViewPatient = () => {
     activeSection,
     appointmentUserData,
     sectionData,
+    dates.startDate,
+    dates.endDate,
     dispatch,
   ]);
 
@@ -157,7 +173,7 @@ const ViewPatient = () => {
       </div>
 
       {/* Section navigation */}
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-6 items-center">
         {sectionList.map((section) => (
           <button
             key={section}
@@ -171,6 +187,13 @@ const ViewPatient = () => {
             {section}
           </button>
         ))}
+
+        {/* Inline Date Range Picker */}
+        {shouldShowDatePicker && (
+          <div className="h-[40px] flex items-center">
+            <DateRangePicker onDateChange={handleDateChange} />
+          </div>
+        )}
       </div>
 
       {/* Active Section Content */}

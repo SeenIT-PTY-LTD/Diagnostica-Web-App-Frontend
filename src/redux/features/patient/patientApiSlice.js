@@ -82,10 +82,13 @@ export const fetchSectionsByBodyPartId = createAsyncThunk(
 
 export const fetchAttemptedSectionPrompts = createAsyncThunk(
   "patients/fetchAttemptedSectionPrompts",
-  async ({ appointmentRefId, sectionId }, { rejectWithValue }) => {
+  async (
+    { appointmentRefId, sectionId, startDate, endDate },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await api.get(
-        `/appointment/get-attempted-section-promts?appointmentRefId=${appointmentRefId}&sectionId=${sectionId}`
+        `/appointment/get-attempted-section-promts?appointmentRefId=${appointmentRefId}&sectionId=${sectionId}&startDate=${startDate}&endDate=${endDate}`
       );
       return response.data;
     } catch (error) {

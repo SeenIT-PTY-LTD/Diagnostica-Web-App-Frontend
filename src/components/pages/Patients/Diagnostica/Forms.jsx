@@ -147,14 +147,48 @@ const DiagnosticaCodeForm = () => {
   //     });
   // };
 
+  const isDisabled =
+    (step === 1 && !formData.side) ||
+    (step === 2 &&
+      (!formData.aetiology ||
+        !formData.disease ||
+        (footAndAnkelsOptions.form2.find(
+          (opt) => opt.option === formData.aetiology
+        )?.condition.length > 0 &&
+          !formData.condition))) ||
+    (step === 3 && !formData.region) ||
+    (step === 4 &&
+      !formData.bones &&
+      !formData.ligaments &&
+      !formData.tendons &&
+      !formData.nerves &&
+      !formData.joints &&
+      !formData.skin) ||
+    (step === 5 &&
+      !formData.fracture &&
+      !formData.ligament &&
+      !formData.osteoarthritis &&
+      !formData.inflammatoryArthritis &&
+      !formData.misc &&
+      !formData.joint &&
+      !formData.softTissue &&
+      !formData.boneLesion &&
+      !formData.neurological) ||
+    (step === 6 &&
+      !formData.Score_1 &&
+      !formData.Score_2 &&
+      !formData.Score_3) ||
+    (step === 7 && !formData.patient) ||
+    (step === 8 && !formData.comment);
+
   const handleSubmit = () => {
     const finalCode = generateCode();
 
     const diagnosticData = {
       code: finalCode,
-      ...(isEdit===true ? {} : { doctorId: doctorId }),
+      ...(isEdit === true ? {} : { doctorId: doctorId }),
       step: step,
-      ...(isEdit===true ? {} : { patientId: patientId }),
+      ...(isEdit === true ? {} : { patientId: patientId }),
       comment: formData.comment,
       status: "Completed",
     };
@@ -855,7 +889,13 @@ const DiagnosticaCodeForm = () => {
 
             <button
               type="button"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex-1 sm:flex-none sm:px-6"
+              className={`px-4 py-2 rounded transition flex-1 sm:flex-none sm:px-6
+    ${step === 8 ? "" : ""} 
+    ${
+      isDisabled
+        ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+        : "bg-blue-600 text-white hover:bg-blue-700"
+    }`}
               onClick={() => {
                 if (step < 8) {
                   setStep((prev) => prev + 1);
@@ -867,40 +907,7 @@ const DiagnosticaCodeForm = () => {
                   });
                 }
               }}
-              disabled={
-                (step === 1 && !formData.side) ||
-                (step === 2 &&
-                  (!formData.aetiology ||
-                    !formData.disease ||
-                    (footAndAnkelsOptions.form2.find(
-                      (opt) => opt.option === formData.aetiology
-                    )?.condition.length > 0 &&
-                      !formData.condition))) ||
-                (step === 3 && !formData.region) ||
-                (step === 4 &&
-                  !formData.bones &&
-                  !formData.ligaments &&
-                  !formData.tendons &&
-                  !formData.nerves &&
-                  !formData.joints &&
-                  !formData.skin) ||
-                (step === 5 &&
-                  !formData.fracture &&
-                  !formData.ligament &&
-                  !formData.osteoarthritis &&
-                  !formData.inflammatoryArthritis &&
-                  !formData.misc &&
-                  !formData.joint &&
-                  !formData.softTissue &&
-                  !formData.boneLesion &&
-                  !formData.neurological) ||
-                (step === 6 &&
-                  !formData.Score_1 &&
-                  !formData.Score_2 &&
-                  !formData.Score_3) ||
-                (step === 7 && !formData.patient) ||
-                (step === 8 && !formData.comment)
-              }
+              disabled={isDisabled}
             >
               {isEdit && step === 8 ? "Update" : step === 8 ? "Submit" : "Next"}
             </button>

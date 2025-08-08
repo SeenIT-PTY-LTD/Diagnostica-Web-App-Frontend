@@ -1,6 +1,5 @@
 module.exports = {
   darkMode: "class",
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -141,7 +140,6 @@ module.exports = {
       },
     },
   },
-  plugins: [],
 safelist: [
   // Background colors
   {
@@ -180,4 +178,12 @@ safelist: [
   "dark:hover:bg-gray-700",
   "dark:hover:text-gray-200",
 ],
+content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/flowbite/**/*.js",
+    "./node_modules/flowbite-datepicker/**/*.js",
+  ],
+  plugins: [
+    require('flowbite/plugin')
+  ]
 };
