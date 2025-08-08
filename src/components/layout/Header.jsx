@@ -23,9 +23,9 @@ const Header = () => {
           {`${auth?.doctorInfo?.[0]?.firstName} ${auth?.doctorInfo?.[0]?.lastName}`}{" "}
         </p>
 
-        <button className={logoutButtonClasses} onClick={handleLogout}>
+        {/* <button className={logoutButtonClasses} onClick={handleLogout}>
           Logout
-        </button>
+        </button> */}
       </div>
     </header>
   );
