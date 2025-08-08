@@ -16,6 +16,7 @@ const PatientInfo = () => {
   }, [dispatch, patientId]);
 
   const labels = [
+    "Profile Image",
     "Name",
     "DOB",
     "Gender",
@@ -33,9 +34,25 @@ const PatientInfo = () => {
     "Weight",
     "BMI",
   ];
+  const placeholderImage = "/default-avatar.png"; // keep this in public folder
 
   const getValueByLabel = (label, patient) => {
     switch (label) {
+      case "Profile Image":
+        return (
+          <div className="flex justify-start sm:justify-end">
+            <img
+              src={
+                patient.profileImage
+                  ? `http://localhost:3003/images/${patient.profileImage}`
+                  : placeholderImage
+              }
+              alt="Profile"
+              className="w-20 h-20 rounded-full object-cover border border-gray-300"
+              onError={(e) => (e.target.src = placeholderImage)}
+            />
+          </div>
+        );
       case "Name":
         return `${patient.firstName} ${patient.lastName}`;
       case "DOB":

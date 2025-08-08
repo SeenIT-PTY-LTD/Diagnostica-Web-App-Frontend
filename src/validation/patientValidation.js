@@ -5,7 +5,7 @@ export const patientSchema = Yup.object({
     firstName: Yup.string().required('Full Name is required'),
     lastName: Yup.string().required('Last Name is required'),
     dob: Yup.date().required('Date of Birth is required'),
-    gender: Yup.string().oneOf(['Male', 'Female', 'Other']).required('Gender is required'),
+    gender: Yup.string().required('Gender is required'),
     phone: Yup.string().required('Phone Number is required'),
     patientCode: Yup.string().required('Patient Code is required'),
     country: Yup.string().required('Country is required'),
