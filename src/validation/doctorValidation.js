@@ -16,7 +16,7 @@ export const addDoctorSchema = Yup.object({
   hospitals: Yup.string().required("Hospital(s) name is required"),
   pediatricSpecialist: Yup.boolean().required("Please specify if pediatric specialist"),
   countryCode: Yup.string()
-    .matches(/^\d+$/, "Country Code must contain only digits")
-    .required("Country Code is required"),
+  .matches(/^\+\d+$/, "Country Code must start with '+' followed by digits")
+  .required("Country Code is required"),
   genderSpecificCare: Yup.boolean().required("Gender care selection is required"),
 });

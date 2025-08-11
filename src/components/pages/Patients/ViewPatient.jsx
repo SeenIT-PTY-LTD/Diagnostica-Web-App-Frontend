@@ -50,14 +50,18 @@ const ViewPatient = () => {
     [appointmentUserData]
   );
 
-  const sectionList = useMemo(
-    () => [
+  const sectionList = useMemo(() => {
+    const sections = [
       "Patient Details",
       ...sectionData.map((s) => s.sectionCode),
-      "Diagnostica",
-    ],
-    [sectionData]
-  );
+    ];
+
+    if (appointmentUserData?.length > 0) {
+      sections.push("Diagnostica");
+    }
+
+    return sections;
+  }, [sectionData, appointmentUserData]);
 
   const handleDateChange = ({ startDate, endDate }) => {
     setDates({ startDate, endDate });
