@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Card from "./Card";
 import { useSelector } from "react-redux";
 import { formatDate } from "../utils/dateFormat";
+import api from "../../src/utils/api";
 
 const Image = () => {
   const { attemptedSectionPrompts, loading } = useSelector(
@@ -45,7 +46,7 @@ const Image = () => {
               {dateGroup.data.map((item, itemIdx) => {
                 const imageUrl = item.img?.startsWith("http")
                   ? item.img
-                  : `http://localhost:3003/images/${item.img?.replace(
+                  : `${{api}}/images/${item.img?.replace(
                       /^\/+/,
                       ""
                     )}`;

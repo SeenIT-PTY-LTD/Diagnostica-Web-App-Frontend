@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react'
-import { fetchDoctorInfo } from './redux/features/auth/authSlice'
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from "react";
+import { fetchDoctorInfo } from "./redux/features/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const HelperRoute = () => {
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(fetchDoctorInfo())
-    }, [dispatch])
-    return (
-        <div>
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
 
-        </div>
-    )
-}
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchDoctorInfo());
+    }
+  }, [dispatch, token]); 
 
-export default HelperRoute
+  return null; 
+};
+
+export default HelperRoute;
