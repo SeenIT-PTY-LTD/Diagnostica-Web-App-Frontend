@@ -30,7 +30,7 @@ const Diagnostica = ({ appointmentRefId }) => {
           Create New Diagnostica Path
         </button>
       </div>
-      <DiagnosticaList />
+      <DiagnosticaList appointmentRefId={appointmentRefId} />
     </>
   );
 };

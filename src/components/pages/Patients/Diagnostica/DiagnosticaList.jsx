@@ -1,15 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const DiagnosticaList = () => {
+const DiagnosticaList = ({ appointmentRefId }) => {
   const navigate = useNavigate();
   const { diagnosticaData } = useSelector((state) => state?.diagnostics);
-  console.log("Diagnostica Data:", diagnosticaData);
 
-  const { id: patientId } = useParams();
-
-  // Format date for display
   const formatDate = (dateString) => {
     const options = {
       year: "numeric",
@@ -23,7 +19,7 @@ const DiagnosticaList = () => {
 
   // Handle edit action
   const handleEdit = (item) => {
-    navigate(`/diagnostica-form/${item.patientId._id}`, {
+    navigate(`/diagnostica-form/${item.patientId._id}/${appointmentRefId}`, {
       state: {
         isEdit: true,
         appointmentData: item, // You can pass the entire item if needed
