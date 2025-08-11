@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/features/auth/authSlice";
+import { useSelector } from "react-redux";
 import Account_circle from "../../assets/img/Account_circle.png";
 
 const Header = () => {

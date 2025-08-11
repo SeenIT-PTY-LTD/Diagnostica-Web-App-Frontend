@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
-  Settings,
+  // Settings,
   LayoutDashboard,
   User,
   BriefcaseMedical,

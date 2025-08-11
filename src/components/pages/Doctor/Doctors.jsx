@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Table from "../../../common/Table";
 import useDoctors from "../../../hooks/useDoctors";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function Doctors() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const pageSize = 5;
 
@@ -18,7 +18,7 @@ function Doctors() {
   ];
 
   if (error) return <p>Error: {error}</p>;
-  const profileButtonClasses = `bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-500`;
+  // const profileButtonClasses = `bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-500`;
 
   return (
     <>
