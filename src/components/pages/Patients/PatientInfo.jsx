@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSinglePatient } from "../../../redux/features/patient/patientApiSlice";
 import api from "../../../utils/api";
+import Loading from "../../../common/Loading";
 
 const PatientInfo = () => {
   const dispatch = useDispatch();
@@ -93,9 +94,7 @@ const PatientInfo = () => {
 
   if (!formReady) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center py-10 text-lg">Loading patient data...</div>
-      </div>
+      <><Loading /></>
     );
   }
 

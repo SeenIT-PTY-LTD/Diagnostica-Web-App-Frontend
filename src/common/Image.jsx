@@ -3,6 +3,7 @@ import Card from "./Card";
 import { useSelector } from "react-redux";
 import { formatDate } from "../utils/dateFormat";
 import api from "../../src/utils/api";
+import Loading from "./Loading";
 
 const Image = () => {
   const { attemptedSectionPrompts, loading } = useSelector(
@@ -21,9 +22,7 @@ const Image = () => {
       </h1>
 
       {loading ? (
-        <div className="flex justify-center items-center py-10">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-solid"></div>
-        </div>
+        <Loading />
       ) : attemptedSectionPrompts.length === 0 ? (
         <div className="flex justify-start items-start py-10 min-h-[200px]">
           <p className="text-gray-500 font-bold text-lg">No data found</p>
@@ -46,10 +45,7 @@ const Image = () => {
               {dateGroup.data.map((item, itemIdx) => {
                 const imageUrl = item.img?.startsWith("http")
                   ? item.img
-                  : `${{api}}/images/${item.img?.replace(
-                      /^\/+/,
-                      ""
-                    )}`;
+                  : `${{ api }}/images/${item.img?.replace(/^\/+/, "")}`;
                 return (
                   <Card key={`${dateGroup.date}-${itemIdx}`}>
                     <div className="space-y-3">
