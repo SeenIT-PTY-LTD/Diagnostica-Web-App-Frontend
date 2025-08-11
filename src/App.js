@@ -60,7 +60,7 @@ const App = () => {
           <Route path="/view-img" element={<Image />} />
           <Route path="/faq-moxfq" element={<MOXFQ />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/diagnostica-form/:id" element={<DiagnosticaCodeForm />} />
+          <Route path="/diagnostica-form/:id/:appointmentRefId" element={<DiagnosticaCodeForm />} />
         </Route>
       </Routes>
       </ErrorBoundary>

@@ -140,6 +140,20 @@ const ViewPatient = () => {
     }
 
     const SectionComponent = sectionComponents[activeSection];
+
+    // Find selected appointment for prop passing
+    const selectedAppointment = appointmentUserData.find(
+      (item) => item.appointmentId === activeAppointmentId
+    );
+
+    if (activeSection === "Diagnostica") {
+      return SectionComponent ? (
+        <SectionComponent appointmentRefId={selectedAppointment?._id} />
+      ) : (
+        <div>No Component Found</div>
+      );
+    }
+
     return SectionComponent ? (
       <SectionComponent />
     ) : (

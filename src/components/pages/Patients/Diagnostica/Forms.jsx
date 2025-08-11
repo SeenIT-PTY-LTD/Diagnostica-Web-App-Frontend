@@ -13,7 +13,7 @@ const DiagnosticaCodeForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { id: patientId } = useParams();
+  const { id: patientId, appointmentRefId } = useParams();
   const { isEdit, appointmentData } = location.state || {};
   const { auth } = useSelector((state) => state);
   const doctorId = auth?.doctorInfo?.[0]?._id;
@@ -187,6 +187,7 @@ const DiagnosticaCodeForm = () => {
     const diagnosticData = {
       code: finalCode,
       ...(isEdit === true ? {} : { doctorId: doctorId }),
+      ...(isEdit === true ? {} : { appointmentRefId: appointmentRefId }),
       step: step,
       ...(isEdit === true ? {} : { patientId: patientId }),
       comment: formData.comment,
