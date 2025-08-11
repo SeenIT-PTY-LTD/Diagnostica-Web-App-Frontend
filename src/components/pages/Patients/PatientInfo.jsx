@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchSinglePatient } from "../../../redux/features/patient/patientApiSlice";
+import api from "../../../utils/api";
 
 const PatientInfo = () => {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ const PatientInfo = () => {
             <img
               src={
                 patient.profileImage
-                  ? `http://localhost:3003/images/${patient.profileImage}`
+                  ? `${api}/images/${patient.profileImage}`
                   : placeholderImage
               }
               alt="Profile"
