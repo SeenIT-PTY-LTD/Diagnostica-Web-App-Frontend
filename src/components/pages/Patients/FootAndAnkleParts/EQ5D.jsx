@@ -21,7 +21,7 @@ const EQ5D = () => {
         </div>
       ) : (
         attemptedSectionPrompts.map((section) =>
-          section.data.map((faq, index) => (
+          section?.data?.map((faq, index) => (
             <FAQItem
               key={faq.question + index}
               question={faq.question}

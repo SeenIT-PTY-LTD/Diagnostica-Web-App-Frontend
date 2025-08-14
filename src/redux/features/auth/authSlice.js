@@ -3,8 +3,8 @@ import axios from "axios";
 import api from "../../../utils/api";
 
 // const API_URL = "http://192.168.0.104:3003";
-const API_URL = "https://d2l873mxalz3b9.cloudfront.net";
-// const API_URL = "http://localhost:3003";
+// const API_URL = "https://d2l873mxalz3b9.cloudfront.net";
+const API_URL = "http://localhost:3003";
 
 // Register User
 export const register = createAsyncThunk(

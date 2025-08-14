@@ -9,7 +9,6 @@ const Image = () => {
   const { attemptedSectionPrompts, loading } = useSelector(
     (state) => state.patients
   );
-
   const [zoomedImage, setZoomedImage] = useState(null);
 
   const openModal = (img) => setZoomedImage(img);
@@ -23,14 +22,48 @@ const Image = () => {
 
       {loading ? (
         <Loading />
-      ) : attemptedSectionPrompts.length === 0 ? (
+      ) : !attemptedSectionPrompts?.length ? (
         <div className="flex justify-start items-start py-10 min-h-[200px]">
           <p className="text-gray-500 font-bold text-lg">No data found</p>
         </div>
       ) : (
-        attemptedSectionPrompts?.map((dateGroup, dateIdx) => (
-          <div key={dateGroup.date + dateIdx} className="space-y-4">
-            {/* Date Header */}
+        attemptedSectionPrompts?.map((dateGroup, dateIdx) => {
+          const items = dateGroup?.data?.subSections?.[0]?.data || [];
+
+          // Merge instruction + comment into a single item before mapping
+          const mergedItems = [];
+          let detailItem = null;
+
+          items?.forEach((item) => {
+            if (
+              item.instruction ||
+              item.isComment ||
+              (Array.isArray(item.questions) && item.questions.length)
+            ) {
+              // This will be our "detail card"
+              if (!detailItem) {
+                detailItem = { ...item, questions: item.questions || [] };
+              } else {
+                // Merge comments/questions into existing detail card
+                if (item.isComment || item.comment)
+                  detailItem.comment = item.comment;
+                if (Array.isArray(item.questions)) {
+                  detailItem.questions = [
+                    ...(detailItem.questions || []),
+                    ...item.questions,
+                  ];
+                }
+              }
+            } else {
+              // Any other item (like image-based) stays separate
+              mergedItems.push(item);
+            }
+          });
+
+          if (detailItem) mergedItems.unshift(detailItem); // Place detail card first
+
+          return mergedItems?.map((item, itemIdx) => (
+            <>
             <div className="border-b border-gray-200 dark:border-gray-700 pb-2">
               <h2 className="text-xl font-semibold text-slate-700 dark:text-gray-300">
                 {formatDate(dateGroup.date)}
@@ -40,36 +73,59 @@ const Image = () => {
                 {dateGroup.data.length !== 1 ? "s" : ""}
               </p>
             </div>
-            {/* Images Grid for this date */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {dateGroup.data.map((item, itemIdx) => {
-                const imageUrl = item.img?.startsWith("http")
-                  ? item.img
-                  : `${{ api }}/images/${item.img?.replace(/^\/+/, "")}`;
-                return (
-                  <Card key={`${dateGroup.date}-${itemIdx}`}>
-                    <div className="space-y-3">
-                      <img
-                        src={imageUrl}
-                        alt={`Pain submission ${itemIdx + 1}`}
-                        className="max-h-[300px] object-contain cursor-zoom-in mx-auto"
-                        onClick={() => openModal(imageUrl)}
-                      />
+            <Card key={`${dateGroup.date}-${itemIdx}`}>
+              <div className="space-y-3">
+                {/* Text details card */}
 
-                      {/* Display question and answer info */}
+                {/* Image-based question card */}
+                {Array.isArray(item.questions) &&
+                  item.questions.some((q) => q.img || q.media) &&
+                  item.questions.map((q, qIdx) => (
+                    <div key={qIdx} className="space-y-3">
+                      {Array.isArray(q.img) &&
+                        q.img.length > 0 &&
+                        q.img.map((imgFile, imgIdx) => {
+                          const cleanPath = imgFile.replace(/^\/+/, "");
+                          const imageUrl = `${api.defaults.baseURL}/images/${cleanPath}`;
+                          return (
+                            <img
+                              key={`${itemIdx}-${imgIdx}`}
+                              src={imageUrl}
+                              alt={`Pain submission ${itemIdx + 1}`}
+                              className="max-h-[300px] object-contain cursor-zoom-in mx-auto"
+                              onClick={() => openModal(imageUrl)}
+                            />
+                          );
+                        })}
                       <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <p className="text-sm text-gray-500">
-                          Answer:{" "}
-                          <span className="font-medium">{item.answer}</span>
+                          <span className="font-medium">Question:</span>{" "}
+                          {q.question}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          <span className="font-medium">Answer:</span>{" "}
+                          {Array.isArray(q.answer)
+                            ? q.answer.join(", ")
+                            : q.answer}
                         </p>
                       </div>
                     </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        ))
+                  ))}
+                {(item.instruction || item.comment) && (
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-3">
+                    {item.comment && (
+                      <p className="text-sm text-yellow-700 bg-yellow-50 dark:bg-gray-700 dark:text-yellow-300 p-2 rounded">
+                        <span className="font-medium">Comment:</span>{" "}
+                        {item.comment}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Card>
+            </>
+          ));
+        })
       )}
 
       {/* Zoom modal */}

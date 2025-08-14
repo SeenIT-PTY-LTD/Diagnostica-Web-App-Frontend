@@ -195,7 +195,10 @@ const ViewPatient = () => {
         {sectionList.map((section) => (
           <button
             key={section}
-            onClick={() => setActiveSection(section)}
+            onClick={() => {
+              setActiveSection(section);
+              dispatch(resetAttemptedSectionPrompts()); // clear old data immediately
+            }}
             className={`px-4 py-2 text-sm sm:text-base rounded border transition-colors ${
               activeSection === section
                 ? "bg-blue-600 text-white border-blue-600 hover:bg-blue-700"
