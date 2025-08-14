@@ -36,25 +36,29 @@ const PatientInfo = () => {
     "Weight",
     "BMI",
   ];
-  const placeholderImage = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fdefault-profile-picture&psig=AOvVaw0QJf2xzvm_U6fnToEXtuBb&ust=1754994408106000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCICO-ePFgo8DFQAAAAAdAAAAABAK"; 
+  const placeholderImage =
+    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fdefault-profile-picture&psig=AOvVaw0QJf2xzvm_U6fnToEXtuBb&ust=1754994408106000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCICO-ePFgo8DFQAAAAAdAAAAABAK";
 
   const getValueByLabel = (label, patient) => {
     switch (label) {
       case "Profile Image":
+        const profileImageUrl = patient.profileImage
+          ? `${api.defaults.baseURL}/images${patient.profileImage}`
+          : placeholderImage;
+
+        console.log("Profile Image URL:", profileImageUrl);
+
         return (
           <div className="flex justify-start sm:justify-end">
             <img
-              src={
-                patient.profileImage
-                  ? `${api}/images/${patient.profileImage}`
-                  : placeholderImage
-              }
+              src={profileImageUrl}
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover border border-gray-300"
               onError={(e) => (e.target.src = placeholderImage)}
             />
           </div>
         );
+
       case "Name":
         return `${patient.firstName} ${patient.lastName}`;
       case "DOB":
@@ -94,7 +98,9 @@ const PatientInfo = () => {
 
   if (!formReady) {
     return (
-      <><Loading /></>
+      <>
+        <Loading />
+      </>
     );
   }
 
