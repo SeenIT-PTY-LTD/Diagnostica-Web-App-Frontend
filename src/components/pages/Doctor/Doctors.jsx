@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../../../common/Table";
 import useDoctors from "../../../hooks/useDoctors";
-// import { useNavigate } from "react-router-dom";
 
 function Doctors() {
-  // const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const pageSize = 5;
 
-  const { data, loading, error, totalPages } = useDoctors(page, pageSize);
+  const { data, loading, error, totalPages } = useDoctors(
+    page,
+    pageSize,
+    debouncedSearchTerm,
+    "firstName"
+  );
   const totalPagesData = Math.ceil(totalPages / pageSize);
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      // Reset to page 1 when search term changes
+      if (searchTerm !== debouncedSearchTerm) {
+        setPage(1);
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [searchTerm]);
 
   const fields = [
     { key: "firstName", label: "Name" },
@@ -34,13 +54,16 @@ function Doctors() {
       <Table
         title={`page ${page} of ${totalPagesData}`}
         fields={fields}
-        data={data}
+        data={data || []}
         rowsPerPage={pageSize}
         showSearch={true}
         serverPagination={true}
         currentPage={page}
         totalCount={totalPages}
         onPageChange={(newPage) => setPage(newPage)}
+        onSearch={(term) => {
+          setSearchTerm(term);
+        }}
         loading={loading}
       />
     </>

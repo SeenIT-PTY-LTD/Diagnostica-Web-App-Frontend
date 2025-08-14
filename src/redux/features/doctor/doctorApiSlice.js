@@ -4,9 +4,16 @@ import api from "../../../utils/api";
 // Fetch paginated patients
 export const fetchDoctors = createAsyncThunk(
   "doctors/fetchDoctors",
-  async ({ page = 1, size = 10 }, { rejectWithValue }) => {
+  async ({ page = 1, size = 10, search, searchCriteria = "" }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/user?role=doctor?page=${page}&size=${size}`);
+      const query = new URLSearchParams({
+        page,
+        size,
+        ...(search ? { search } : {}), // only add if truthy
+        ...(searchCriteria ? { searchCriteria } : {}),
+      }).toString();
+
+      const response = await api.get(`/user?role=doctor?${query}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

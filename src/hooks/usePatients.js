@@ -29,7 +29,6 @@ import {
 const usePatients = (page = 1, size = 5, search = "", searchCriteria = "") => {
   const dispatch = useDispatch();
   const doctorState = useSelector((state) => state.patients);
-  console.log("doctorState:", doctorState);
 
   useEffect(() => {
     dispatch(fetchDashboardCount());
