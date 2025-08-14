@@ -17,9 +17,16 @@ export const fetchDashboardCount = createAsyncThunk(
 // Fetch paginated patients
 export const fetchPatients = createAsyncThunk(
   "patients/fetchPatients",
-  async ({ page = 1, size = 10 }, { rejectWithValue }) => {
+  async ({ page = 1, size = 10, search, searchCriteria = "" }, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/patient?page=${page}&size=${size}`);
+      const query = new URLSearchParams({
+        page,
+        size,
+        ...(search ? { search } : {}), // only add if truthy
+        ...(searchCriteria ? { searchCriteria } : {}),
+      }).toString();
+
+      const response = await api.get(`/patient?${query}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

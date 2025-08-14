@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 function Table({
   title = "Table",
@@ -8,8 +8,9 @@ function Table({
   showSearch = false,
   serverPagination = false,
   currentPage: controlledPage = 1,
-  totalCount,
+  totalCount = 0,
   onPageChange,
+  onSearch,
   loading = false,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,15 +19,29 @@ function Table({
 
   const activePage = isControlled ? controlledPage : internalPage;
 
+  // Debounce search for server mode
+  useEffect(() => {
+    if (isControlled && typeof onSearch === "function") {
+      const delay = setTimeout(() => {
+        onSearch(searchTerm.trim());
+      }, 500);
+      return () => clearTimeout(delay);
+    }
+  }, [searchTerm, isControlled, onSearch]);
+
   const filteredData = useMemo(() => {
+    if (isControlled) return data;
     if (!showSearch || searchTerm.trim() === "") return data;
     return data.filter((item) =>
       JSON.stringify(item).toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm, data, showSearch]);
+  }, [searchTerm, data, showSearch, isControlled]);
 
-  const totalItems = isControlled ? totalCount || 0 : filteredData.length;
-  const totalPages = Math.ceil(totalItems / rowsPerPage);
+  const totalPages = useMemo(() => {
+    return isControlled
+      ? Math.ceil(totalCount / rowsPerPage)
+      : Math.ceil(filteredData.length / rowsPerPage);
+  }, [isControlled, totalCount, rowsPerPage, filteredData.length]);
 
   const paginatedData = useMemo(() => {
     if (isControlled) return filteredData;
@@ -34,10 +49,10 @@ function Table({
     return filteredData.slice(start, start + rowsPerPage);
   }, [activePage, filteredData, rowsPerPage, isControlled]);
 
-  const handleSearch = (e) => {
+  const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     if (!isControlled) setInternalPage(1);
-    else onPageChange(1);
+    else if (typeof onPageChange === "function") onPageChange(1);
   };
 
   const handlePageChange = (newPage) => {
@@ -58,7 +73,7 @@ function Table({
             type="text"
             placeholder="Search..."
             value={searchTerm}
-            onChange={handleSearch}
+            onChange={handleSearchChange}
             className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
           />
         )}
@@ -124,7 +139,7 @@ function Table({
       </div>
 
       {/* Pagination */}
-      {isControlled && totalPages > 1 && (
+      {totalPages > 1 && (
         <div className="flex justify-end mt-4 space-x-2 overflow-x-auto">
           <button
             onClick={() => handlePageChange(Math.max(activePage - 1, 1))}
