@@ -37,7 +37,7 @@ const PatientInfo = () => {
     "BMI",
   ];
   const placeholderImage =
-    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fdefault-profile-picture&psig=AOvVaw0QJf2xzvm_U6fnToEXtuBb&ust=1754994408106000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCICO-ePFgo8DFQAAAAAdAAAAABAK";
+    "";
 
   const getValueByLabel = (label, patient) => {
     switch (label) {

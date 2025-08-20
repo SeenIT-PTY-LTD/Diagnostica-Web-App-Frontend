@@ -18,6 +18,7 @@ import HelperRoute from "./HelperRoute";
 import Doctors from "./components/pages/Doctor/Doctors";
 import AddDoctor from "./components/pages/Doctor/AddDoctor";
 import ErrorBoundary from "./common/ErrorBoundary";
+import VerifyEmail from "./common/VerifyEmail";
 
 const App = () => {
   const { auth } = useSelector((state) => state);
@@ -43,6 +44,12 @@ const App = () => {
           }
         />
 
+          <Route
+          path="/verify/:token"
+          element={
+            auth.token ? <Navigate to="/dashboard" replace /> : <VerifyEmail />
+          }
+        />
         {/* Protected Routes with Layout wrapping all authenticated pages */}
         <Route
           element={
