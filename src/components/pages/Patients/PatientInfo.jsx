@@ -28,8 +28,6 @@ const PatientInfo = () => {
     "Address",
     "State",
     "Height",
-    "About Us",
-    "Doctor Details",
     "URN",
     "Email",
     "Country",
