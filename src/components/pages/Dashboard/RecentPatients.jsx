@@ -3,22 +3,6 @@ import usePatients from "../../../hooks/usePatients";
 import { formatDateMMDDYYYY } from "../../../utils/dateFormat";
 
 const fields = [
-  {
-    key: "image",
-    label: "Image",
-    render: (value) =>
-      value ? (
-        <img
-          src={value}
-          alt="img"
-          className="w-10 h-10 rounded-full object-cover"
-        />
-      ) : (
-        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-500">
-          N/A
-        </div>
-      ),
-  },
   { key: "firstName", label: "Patient" },
   { key: "phone", label: "Phone" },
   {

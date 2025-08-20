@@ -239,6 +239,10 @@ const PersonalInfo = () => {
                           label: "Contact Person Last Name",
                           value: worker.contactPersonLastName,
                         },
+                        {
+                          label: "Contact Person Number",
+                          value: worker.contactPersonNumber,
+                        },
                       ].map((field, i) => (
                         <div
                           key={i}

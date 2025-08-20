@@ -3,10 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { showToast } from "./ShowToast";
 import { CheckCircle, XCircle, Loader2, MailCheck, Smartphone } from "lucide-react";
-
-// const API_URL = "http://192.168.0.104:3003";
-const API_URL = "https://d2l873mxalz3b9.cloudfront.net";
-// const API_URL = "http://localhost:3003";
+import { API_URL } from "../utils/api";
 
 const VerifyEmail = () => {
   const { token } = useParams();

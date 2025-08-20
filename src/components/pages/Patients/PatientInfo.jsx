@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { fetchSinglePatient } from "../../../redux/features/patient/patientApiSlice";
 import api from "../../../utils/api";
 import Loading from "../../../common/Loading";
+import Account_circle from "../../../assets/img/Account_circle.png";
 
 const PatientInfo = () => {
   const dispatch = useDispatch();
@@ -36,15 +37,13 @@ const PatientInfo = () => {
     "Weight",
     "BMI",
   ];
-  const placeholderImage =
-    "";
 
   const getValueByLabel = (label, patient) => {
     switch (label) {
       case "Profile Image":
         const profileImageUrl = patient.profileImage
           ? `${api.defaults.baseURL}/images${patient.profileImage}`
-          : placeholderImage;
+          : Account_circle;
 
         console.log("Profile Image URL:", profileImageUrl);
 
@@ -54,7 +53,7 @@ const PatientInfo = () => {
               src={profileImageUrl}
               alt="Profile"
               className="w-20 h-20 rounded-full object-cover border border-gray-300"
-              onError={(e) => (e.target.src = placeholderImage)}
+              onError={(e) => (e.target.src = Account_circle)}
             />
           </div>
         );
@@ -75,10 +74,6 @@ const PatientInfo = () => {
         return patient.state;
       case "Height":
         return patient.height ? `${patient.height} cm` : "-";
-      case "About Us":
-        return "-"; // Placeholder
-      case "Doctor Details":
-        return "-"; // Placeholder
       case "URN":
         return patient.urn;
       case "Email":
