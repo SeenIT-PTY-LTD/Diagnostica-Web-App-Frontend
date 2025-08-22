@@ -6,7 +6,7 @@ function Doctors() {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const pageSize = 5;
+  const pageSize = 10;
 
   const { data, loading, error, totalPages } = useDoctors(
     page,

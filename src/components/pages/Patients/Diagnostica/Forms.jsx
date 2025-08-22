@@ -125,28 +125,6 @@ const DiagnosticaCodeForm = () => {
     formData.patient,
   ]);
 
-  // const handleSubmit = () => {
-  //   const finalCode = generateCode();
-
-  //   const diagnosticData = {
-  //     code: finalCode,
-  //     doctorId: "657d3cc03100a7e6de4d9d39",
-  //     step: step,
-  //     patientId: patientId,
-  //     comment: formData.comment,
-  //     status: "Completed"
-  //   };
-
-  //   dispatch(createDiagnostic(diagnosticData))
-  //     .unwrap()
-  //     .then((res) => {
-  //       showToast("success", res?.message);
-  //     })
-  //     .catch((err) => {
-  //       showToast("error", err?.message);
-  //     });
-  // };
-
   const isDisabled =
     (step === 1 && !formData.side) ||
     (step === 2 &&
