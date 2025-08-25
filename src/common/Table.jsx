@@ -139,7 +139,6 @@ function Table({
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
         <div className="flex justify-end mt-4 space-x-2 overflow-x-auto">
           <button
             onClick={() => handlePageChange(Math.max(activePage - 1, 1))}
@@ -171,7 +170,6 @@ function Table({
             Next
           </button>
         </div>
-      )}
     </div>
   );
 }
