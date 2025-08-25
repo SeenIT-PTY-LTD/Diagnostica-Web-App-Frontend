@@ -43,8 +43,6 @@ const PatientInfo = () => {
           ? `${api.defaults.baseURL}/images${patient.profileImage}`
           : Account_circle;
 
-        console.log("Profile Image URL:", profileImageUrl);
-
         return (
           <div className="flex justify-start sm:justify-end">
             <img

@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import Card from "../../../../common/Card";
-import { footAndAnkelsOptions } from "./Options";
+import {
+  extractForm1,
+  extractForm2,
+  extractForm3,
+  extractForm4,
+  extractForm5,
+  extractForm6,
+  extractForm7,
+  footAndAnkelsOptions,
+} from "./Options";
 import {
   createDiagnostic,
   updateDiagnostic,
@@ -19,6 +28,9 @@ const DiagnosticaCodeForm = () => {
   const doctorId = auth?.doctorInfo?.[0]?._id;
 
   const [step, setStep] = useState(1);
+  console.log("step", step);
+  console.log("appointmentData", appointmentData);
+
   const [formData, setFormData] = useState({
     code: "",
     side: "",
@@ -205,6 +217,49 @@ const DiagnosticaCodeForm = () => {
         });
     }
   };
+
+  useEffect(() => {
+    if (isEdit && appointmentData?.code) {
+      let parsed = {};
+
+      if (step === 1) {
+        parsed = { side: extractForm1(appointmentData.code) };
+      }
+
+      if (step === 2) {
+        parsed = extractForm2(appointmentData.code);
+      }
+
+      if (step === 3) {
+        parsed = extractForm3(appointmentData.code);
+      }
+
+      if (step === 4) {
+        parsed = extractForm4(appointmentData.code);
+      }
+
+      if (step === 5) {
+        parsed = extractForm5(appointmentData.code);
+      }
+
+      if (step === 6) {
+        parsed = extractForm6(appointmentData.code);
+      }
+
+      if (step === 7) {
+        parsed = extractForm7(appointmentData.code);
+      }
+
+      if (step === 8) {
+        parsed = { comment: appointmentData.comment || "" };
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        ...parsed,
+      }));
+    }
+  }, [isEdit, appointmentData, step]);
 
   useEffect(() => {
     const finalCode = generateCode();

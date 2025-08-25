@@ -19,6 +19,7 @@ import Doctors from "./components/pages/Doctor/Doctors";
 import AddDoctor from "./components/pages/Doctor/AddDoctor";
 import ErrorBoundary from "./common/ErrorBoundary";
 import VerifyEmail from "./common/VerifyEmail";
+import NotFound from "./common/NotFound";
 
 const App = () => {
   const { auth } = useSelector((state) => state);
@@ -68,6 +69,7 @@ const App = () => {
           <Route path="/faq-moxfq" element={<MOXFQ />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/diagnostica-form/:id/:appointmentRefId" element={<DiagnosticaCodeForm />} />
+           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
       </ErrorBoundary>

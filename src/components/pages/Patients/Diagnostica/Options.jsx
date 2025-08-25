@@ -234,3 +234,169 @@ export const footAndAnkelsOptions = {
     ],
   },
 };
+
+export function extractForm1(code) {
+  if (!code) return "";
+  if (code.includes("R")) return "R";
+  if (code.includes("L")) return "L";
+  return "";
+}
+
+export function extractForm2(code) {
+  if (!code) return { aetiology: "", disease: "", condition: "" };
+
+  // Default
+  let aetiology = "";
+  let disease = "";
+  let condition = "";
+
+  // Congenital (Con)
+  if (code.includes(": Con :")) {
+    aetiology = "Congenital";
+
+    // Direct match for disease
+    disease = ": Con : C :";
+
+    // Condition is always Chronic for congenital in your config
+    condition = "";
+  }
+
+  // Acquired (Acq)
+  if (code.includes(": Acq :")) {
+    aetiology = "Acquired";
+
+    // Find disease match from your list
+    const diseases = [
+      ": Acq : T :",
+      ": Acq : I :",
+      ": Acq : M/E :",
+      ": Acq : F :",
+      ": Acq : D :",
+      ": Acq : G :",
+      ": Acq : P :",
+    ];
+    disease = diseases.find((d) => code.includes(d)) || "";
+
+    // Find condition
+    if (code.includes("A :")) condition = "A :";
+    if (code.includes("C :")) condition = "C :";
+  }
+
+  return { aetiology, disease, condition };
+}
+
+export function extractForm3(code) {
+  if (!code) return { region: "" };
+
+  const regions = ["1 :", "2 :", "3 :", "4 :"];
+  const region = regions.find((r) => code.includes(r)) || "";
+
+  return { region };
+}
+
+export function extractForm4(code) {
+  if (!code) {
+    return {
+      bones: "",
+      ligaments: "",
+      tendons: "",
+      nerves: "",
+      joints: "",
+      skin: "",
+    };
+  }
+
+  const anatomyOptions = footAndAnkelsOptions.form4;
+
+  const findMatch = (options) =>
+    options.find((opt) => code.includes(opt.value))?.value || "";
+
+  return {
+    bones: findMatch(anatomyOptions.bones),
+    ligaments: findMatch(anatomyOptions.ligaments),
+    tendons: findMatch(anatomyOptions.tendons),
+    nerves: findMatch(anatomyOptions.nerves),
+    joints: findMatch(anatomyOptions.joints),
+    skin: findMatch(anatomyOptions.skin),
+  };
+}
+
+export function extractForm5(code) {
+  if (!code) {
+    return {
+      fracture: "",
+      ligament: "",
+      tendinopathy: "",
+      osteoarthritis: "",
+      inflammatoryArthritis: "",
+      misc: "",
+      joint: "",
+      softTissue: "",
+      boneLesion: "",
+      neurological: "",
+    };
+  }
+
+  const pathologyOptions = footAndAnkelsOptions.form5;
+
+  const findMatch = (options) =>
+    options.find((opt) => code.includes(opt.value))?.value || "";
+
+  return {
+    fracture: findMatch(pathologyOptions.fracture),
+    ligament: findMatch(pathologyOptions.ligament),
+    tendinopathy: findMatch(pathologyOptions.tendinopathy),
+    osteoarthritis: findMatch(pathologyOptions.osteoarthritis),
+    inflammatoryArthritis: findMatch(pathologyOptions.inflammatoryArthritis),
+    misc: findMatch(pathologyOptions.misc),
+    joint: findMatch(pathologyOptions.joint),
+    softTissue: findMatch(pathologyOptions.softTissue),
+    boneLesion: findMatch(pathologyOptions.boneLesion),
+    neurological: findMatch(pathologyOptions.neurological),
+  };
+}
+
+export function extractForm6(code) {
+  if (!code) {
+    return { Score_1: "", Score_2: "", Score_3: "", combined: "" };
+  }
+
+  const scores = footAndAnkelsOptions.form6.scores;
+
+  // 🔹 Take only part after last ")"
+  let lastChunk = code.split(")").pop() || code;
+
+  // 🔹 Remove ASA codes (so they don’t stick to M6 etc.)
+  lastChunk = lastChunk.replace(/ASA\d+/g, "").trim();
+
+  // 🔹 Tokenize properly
+  const tokens = lastChunk
+    .split(/[\s:]+/) // split by space or colon
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  // 🔹 Prioritize longer matches first (M6 over M)
+  const sortByLength = (arr) =>
+    [...arr].sort((a, b) => b.value.length - a.value.length);
+
+  const findMatch = (options) => {
+    const sorted = sortByLength(options);
+    return sorted.find((opt) => tokens.includes(opt.value))?.value || "";
+  };
+
+  const Score_1 = findMatch(scores.Score_1);
+  const Score_2 = findMatch(scores.Score_2);
+  const Score_3 = findMatch(scores.Score_3);
+
+  // 🔹 Deduplicate & preserve order
+  const combined = [Score_1, Score_2, Score_3].filter(Boolean).join(" ");
+
+  return { Score_1, Score_2, Score_3, combined };
+}
+
+export function extractForm7(code) {
+  if (!code) return { patient: "" };
+
+  const match = code.match(/ASA\d/); // looks for ASA1, ASA2, ASA3...
+  return { patient: match ? match[0] : "" };
+}

@@ -102,7 +102,7 @@ const Sidebar = () => {
             icon={<PlusIcon size={isCollapsed ? 22 : 20} />}
             text="Add Doctor"
             isCollapsed={isCollapsed}
-          /> */}
+          />
           {/* <SidebarLink
             to="/settings"
             icon={<Settings size={isCollapsed ? 22 : 20} />}

@@ -75,6 +75,7 @@ const AddDoctor = () => {
             { name: "specialization", label: "Specialization" },
             { name: "location", label: "Geographic Location" },
             { name: "hospitals", label: "Hospitals I works at" },
+            { name: "password", label: "Password" },
           ].map(({ name, label }) => (
             <>
               {name !== "countryCode" ? (
