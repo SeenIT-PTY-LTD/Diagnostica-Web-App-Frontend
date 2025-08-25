@@ -13,7 +13,7 @@ export const fetchDoctors = createAsyncThunk(
         ...(searchCriteria ? { searchCriteria } : {}),
       }).toString();
 
-      const response = await api.get(`/user?role=doctor?${query}`);
+      const response = await api.get(`/user?role=doctor&${query}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
