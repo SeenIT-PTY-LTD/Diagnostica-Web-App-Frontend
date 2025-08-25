@@ -51,6 +51,7 @@ function RecentPatients() {
         title="Recent Patients"
         fields={fields}
         data={data}
+        serverPagination={false}
         rowsPerPage={pageSize}
         loading={loading}
       />

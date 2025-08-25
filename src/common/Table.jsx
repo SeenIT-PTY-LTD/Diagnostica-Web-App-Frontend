@@ -139,6 +139,10 @@ function Table({
       </div>
 
       {/* Pagination */}
+
+      {
+        serverPagination &&
+
         <div className="flex justify-end mt-4 space-x-2 overflow-x-auto">
           <button
             onClick={() => handlePageChange(Math.max(activePage - 1, 1))}
@@ -151,11 +155,10 @@ function Table({
             <button
               key={i}
               onClick={() => handlePageChange(i + 1)}
-              className={`px-3 py-1 rounded ${
-                activePage === i + 1
+              className={`px-3 py-1 rounded ${activePage === i + 1
                   ? "bg-blue-500 text-white"
                   : "bg-gray-100 hover:bg-gray-200"
-              }`}
+                }`}
             >
               {i + 1}
             </button>
@@ -170,7 +173,9 @@ function Table({
             Next
           </button>
         </div>
+      }
     </div>
+
   );
 }
 
