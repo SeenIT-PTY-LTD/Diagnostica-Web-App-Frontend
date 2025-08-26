@@ -97,7 +97,7 @@ const Sidebar = () => {
             text="Doctors"
             isCollapsed={isCollapsed}
           />
-           {/* <SidebarLink
+          <SidebarLink
             to="/add-doctor"
             icon={<PlusIcon size={isCollapsed ? 22 : 20} />}
             text="Add Doctor"

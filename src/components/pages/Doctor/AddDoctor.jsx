@@ -72,36 +72,36 @@ const AddDoctor = () => {
             { name: "countryCode", label: "Country Code" },
             { name: "phone", label: "Contact Number" },
             { name: "email", label: "Email Address" },
+            { name: "password", label: "Password", type: "password" },
             { name: "specialization", label: "Specialization" },
             { name: "location", label: "Geographic Location" },
             { name: "hospitals", label: "Hospitals I works at" },
-            { name: "password", label: "Password" },
-          ].map(({ name, label }) => (
+          ].map(({ name, label, type }) => (
             <>
               {name !== "countryCode" ? (
                 <div key={name}>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">
-                    {label}
-                  </label>
-                  <input
-                    type="text"
-                    name={name}
-                    id={name}
-                    value={formik.values[name]}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className={`w-full border rounded px-4 py-2 focus:outline-none ${
-                      formik.errors[name] && formik.touched[name]
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  />
-                  {formik.errors[name] && formik.touched[name] && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {formik.errors[name]}
-                    </p>
-                  )}
-                </div>
+        <label className="block text-md font-semibold text-gray-700 mb-1">
+          {label}
+        </label>
+        <input
+          type={type || "text"}   // 👈 use type from config
+          name={name}
+          id={name}
+          value={formik.values[name]}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          className={`w-full border rounded px-4 py-2 focus:outline-none ${
+            formik.errors[name] && formik.touched[name]
+              ? "border-red-500"
+              : "border-gray-300"
+          }`}
+        />
+        {formik.errors[name] && formik.touched[name] && (
+          <p className="text-sm text-red-500 mt-1">
+            {formik.errors[name]}
+          </p>
+        )}
+      </div>
               ) : (
                 <div>
                   <label className="block text-md font-semibold text-gray-700 mb-1">
